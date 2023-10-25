@@ -4,5 +4,5 @@
 @endsection
 
 @section('contenido')
-Contenido de Tu Cuenta
+Contenido de Tu Cuenta Profile
 @endsection
