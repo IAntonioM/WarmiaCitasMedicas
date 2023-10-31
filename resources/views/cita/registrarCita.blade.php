@@ -1,10 +1,9 @@
 @extends('layouts.sessionApp')
 @section('titulo')
-    Home
+    Registrar Cita
     
 @endsection
 
 @section('contenido')
-    <hr>
     
 @endsection

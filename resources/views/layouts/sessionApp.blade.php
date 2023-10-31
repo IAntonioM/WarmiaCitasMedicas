@@ -22,22 +22,38 @@
 <body class="">
   
       <div class="main-container d-flex">
+        {{-- inicio dashboard --}}
         <div class="sidebar" id="side_nav">
             <div class="header-box pt-3 px-4 pb-4 d-flex justify-content-between">
+                {{-- logo --}}
                 <h1 class="fs-4">
                     <img class="logo" src="{{ asset('img/logo-app.jpg') }}" alt="">
-                    {{-- <span class="bg-white text-dark rounded shadow px-2 me-2">CL</span> <span
-                        class="text-white">Warmi'A</span> --}}
                 </h1>
                 <button class="btn d-md-none d-block close-btn px-1 py-0 text-white"><i class="fa fa-bars"></i></button>
             </div>
-
             <ul class="list-unstyled px-2">
                 <li class="{{ request()->is('/dashboard/homeDashboard') ? 'active' : '' }}">
                     <a href="/dashboard/homeDashboard" class="text-decoration-none px-3 py-2 d-block">
                         <i class="fa fa-home"></i>
-                        Inicio</a>
+                        Inicio
+                    </a>
                 </li>
+
+                <hr class="h-color mx-2">
+                <p class="px-3 d-block">Control</p>
+                <li class="{{ request()->is('dashboard/gestion-citas') ? 'active' : '' }}">
+                    <a href="/dashboard/gestion-citas" class="text-decoration-none px-3 py-2 d-block">
+                    <i class="fa fa-list"></i>
+                    Gestion de Citas</a>
+                </li>
+                <li class="{{ request()->is('dashboard/gestion-pacientes') ? 'active' : '' }}">
+                    <a href="/dashboard/gestion-pacientes" class="text-decoration-none px-3 py-2 d-block">
+                    <i class="fa fa-list"></i>
+                    Gestion de Pacientes</a>
+                </li>
+                <hr class="h-color mx-2">
+                <p class="px-3 d-block">Gestion</p>
+                
                 <li class="{{ request()->is('dashboard/calendario-citas') ? 'active' : '' }}">
                     <a href="/dashboard/calendario-citas" class="text-decoration-none px-3 py-2 d-block">
                         <i class="fa fa-calendar"></i>
@@ -47,12 +63,7 @@
                     <a href="/dashboard/notificacion-citas" class="text-decoration-none px-3 py-2 d-block d-flex justify-content-between">
                         <span><i class="fa fa-bell"></i> Notificaciones</span>
                   <span class="bg-dark rounded-pill text-white py-0 px-2">02</span>
-              </a>
-          </li>
-                <li class="{{ request()->is('dashboard/gestion-citas') ? 'active' : '' }}">
-                    <a href="/dashboard/gestion-citas" class="text-decoration-none px-3 py-2 d-block">
-                    <i class="fa fa-list"></i>
-                    Gestion de Citas</a>
+                    </a>
                 </li>
                 <li class="">
                     <a href="#" class="text-decoration-none px-3 py-2 d-block">
@@ -61,18 +72,25 @@
                 </li>
             </ul>
             <hr class="h-color mx-2">
-            
+            <p class="px-3 d-block">Cargo :</p>
             <ul class="list-unstyled px-2">
-                <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class="fal fa-bars"></i>
-                        Nombres: Antonio Mayhuay</a></li>
-                        <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class="fal fa-bars"></i>
-                            Rol: Recepcionista</a></li>
-                <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class="fal fa-bell"></i>
-                        Cerrar Sesion</a></li>
+                <li class="">
+                    <a href="#" class="text-decoration-none px-2 py-2 d-block">
+                        Recepcionista
+                    </a>
+                </li>
+                <hr class="h-color mx-2">
+                <li class="">
+                    <a href="#" class="text-decoration-none px-3 py-2 d-block">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        Cerrar Sesion
+                    </a>
+                </li>
 
             </ul>
 
         </div>
+            {{-- Fin dashboard --}}
         <div class="content">
             <nav class="navbar navbar-expand-md navbar-light bg-light">
                 <div class="container-fluid">
@@ -101,7 +119,7 @@
             </nav>
 
             <main class="dashboard-content px-3 pt-4">
-                @yield('titulo')
+                <h4>@yield('titulo')</h4>
                 @yield('contenido')
             </main>
       </div>

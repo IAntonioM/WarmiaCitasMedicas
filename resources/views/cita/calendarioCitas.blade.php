@@ -1,7 +1,4 @@
 @extends('layouts.sessionApp')
-@section('url')
-    /calendario-citas
-@endsection
 @section('titulo')
     Calendario de Citas
 @endsection
