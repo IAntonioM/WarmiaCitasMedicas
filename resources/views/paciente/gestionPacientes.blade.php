@@ -7,42 +7,49 @@
 @section('contenido')
     <hr>
     <div class="d-md-flex justify-content-md-end">
-        <form action="/" method="GET">
+        <form action="" method="GET" class="d-flex align-items-center">
             <input type="text" name="busqueda" class="form-control">
             <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
         </form>
     </div>
     <div class="mb-4">
-        <a href="/dashboard/registrar-paciente" class="btn btn-primary">Agregar Paciente <i class="fa-solid fa-square-plus"></i></a>
+        <div class="mb-4">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addNewModal">Agregar Paciente <i class="fa-solid fa-square-plus"></i></button>
+        </div>
     </div>
     <table class="table">
         <thead>
-            
-            <td>ID</td>
-            <td>Nombres</td>
-            <td>DNI</td>
-            <td>F. de Nacimiento</td>
-            <td>Dirección</td>
-            <td>Teléfono</td>
-            <td>Acciones</td>
+            <tr>
+                <th>ID</th>
+                <th>Nombres</th>
+                <th>DNI</th>
+                <th>F. de Nacimiento</th>
+                <th>Dirección</th>
+                <th>Teléfono</th>
+                <th>Acciones</th>
+            </tr>
         </thead>
         <tbody>
+            @foreach ($pacientes as $paciente)
             <tr>
-                <td>167</td>
-                <td>Brayan Maraiana Salazar Sanchez</td>
-                <td>74562458</td>
-                <td>1999-11-01</td>
-                <td>Av. avenida 123</td>
-                <td>978245456</td>
+                <td>{{ $paciente->id }}</td>
+                <td>{{ $paciente->nombres }} {{ $paciente->apellidos }}</td>
+                <td>{{ $paciente->dni }}</td>
+                <td>{{ $paciente->fechaNacimiento }}</td>
+                <td>{{ $paciente->direccion }}</td>
+                <td>{{ $paciente->telefono }}</td>
                 <td class="">
-                    <a href="" class="btn btn-primary">Ver <i class="far fa-eye"></i></a>
-                    <a href="" class="btn btn-warning">Editar <i class="fas fa-edit"></i></a>
+                    <button  class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#modal1">Editar <i class="fas fa-edit"></i></button>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal2">Eliminar <i class="fa-solid fa-circle-xmark"></i></button>
                 </td>
             </tr>
-           
+            @endforeach
         </tbody>
         <tfoot>
-              
+            
         </tfoot>
     </table>
+    @include('paciente.registrarPaciente')
+    @include('paciente.editarPaciente')
+    @include('paciente.eliminarPaciente')
 @endsection

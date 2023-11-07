@@ -62,12 +62,12 @@ Inicio de Sesion
                 @enderror
               </div>
               <div class="mb-3">
-                <label for="rol" class="form-label">Rol</label>
-                <select class="form-select" name="rol" id="rol" required>
+                <label for="cargo" class="form-label">Cargo</label>
+                <select class="form-select" name="cargo" id="cargo" required>
                   <option value="none">Seleccione...</option>
-                  <option value="administrador">Administrador</option>
-                  <option value="medico">Medico</option>
-                  <option value="recepcionista">Recepcionista</option>
+                  <option value="Administrador">Administrador</option>
+                  <option value="Medico">Medico</option>
+                  <option value="Recepcionista">Recepcionista</option>
                 </select>
                 <div class="invalid-feedback">
                   Please provide a valid state.

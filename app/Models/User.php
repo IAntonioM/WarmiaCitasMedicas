@@ -23,12 +23,13 @@ class User extends Authenticatable
         'nombres',
         'apellidos',
         'dni',
+        'cargo',
         'password',
     ];
 
-    public static function crearUsuario($nombres, $apellidos, $dni, $password)
+    public static function crearUsuario($nombres, $apellidos, $dni, $cargo, $password)
     {
-        DB::insert('INSERT INTO users (nombres, apellidos, dni, password) VALUES (?, ?, ?, ?)', [$nombres, $apellidos, $dni, $password]);
+        DB::insert('INSERT INTO users (nombres, apellidos, dni, cargo, password) VALUES (?, ?, ?, ?,?)', [$nombres, $apellidos, $dni, $cargo, $password]);
     }
 
     /**

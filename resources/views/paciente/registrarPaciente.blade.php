@@ -1,59 +1,58 @@
-@extends('layouts.sessionApp')
-@section('titulo')
-    Registrar Paciente
-@endsection
+<div class="modal fade" id="addNewModal" tabindex="-1" aria-labelledby="addNewModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="addNewModalLabel">Registrar Paciente</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <form method="POST" action="{{route('registrarPaciente')}}">
+                  @csrf
+                  <div class="row g-3">
+                      <div class="col-sm-6">
+                          <label for="nombres" class="form-label">Nombres *</label>
+                          <input type="text" class="form-control" id="nombres" name="nombres" placeholder="" value="" required>
+                      </div>
 
-@section('contenido')
-<form class="needs-validation" novalidate>
-    <div class="row g-3">
-      <div class="col-sm-6">
-        <label for="nombres" class="form-label">Nombres *</label>
-        <input type="text" class="form-control" id="nombres" placeholder="" value="" required>
-        <div class="invalid-feedback">
-          Valid first name is required.
-        </div>
+                      <div class="col-sm-6">
+                          <label for="apellidos" class="form-label">Apellidos *</label>
+                          <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="" value="" required>
+                      </div>
+
+                      <div class="col-8">
+                          <label for="fechaNacimiento" class="form-label">Fecha Nacimiento *</label>
+                          <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento" placeholder="" required>
+                      </div>
+                      <div class="col-4">
+                          <label for="dni" class="form-label">DNI *</label>
+                          <input type="number" class="form-control" id="dni" name="dni" placeholder="">
+                      </div>
+                      <div class="col-7">
+                          <label for="direccion" class="form-label">Dirección *</label>
+                          <input type="text" class="form-control" id="direccion" name="direccion" placeholder="">
+                      </div>
+                      <div class="col-5">
+                          <label for="telefono" class="form-label">Telefono *</label>
+                          <input type="text" class="form-control" id="telefono" name="telefono" placeholder="">
+                      </div>
+                      <hr class="my-4">
+                      <button class="btn btn-primary " type="submit">Registrar</button>
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          </div>
       </div>
-
-      <div class="col-sm-6">
-        <label for="apellidos" class="form-label">Apellidos *</label>
-        <input type="text" class="form-control" id="apellidos" placeholder="" value="" required>
-        <div class="invalid-feedback">
-          Valid last name is required.
-        </div>
-      </div>
+  </div>
+</div>
 
 
-      <div class="col-4">
-        <label for="dni" class="form-label">DNI *</label>
-        <input type="number" class="form-control" id="dni" placeholder="">
-        <div class="invalid-feedback">
-          Please enter a valid email address for shipping updates.
-        </div>
-      </div>
-
-      <div class="col-8">
-        <label for="fechaNac" class="form-label">Fecha Nacimiento *</label>
-        <input type="date" class="form-control" id="fechaNac" placeholder="" required>
-        <div class="invalid-feedback">
-          Please enter your shipping address.
-        </div>
-      </div>
-
-      <div class="col-6">
-        <label for="address2" class="form-label">Dirección *</label>
-        <input type="text" class="form-control" id="address2" placeholder="">
-      </div>
-      <div class="col-6">
-        <label for="address2" class="form-label">Telefono *</label>
-        <input type="text" class="form-control" id="address2" placeholder="">
-      </div>
-
-      
-    <hr class="my-4">
-    <a class="btn btn-primary btn-lg" type="submit">Volver</a>
-    <button class="btn btn-primary btn-lg" type="submit">Registrar Paciente</button>
-  </form>
 
 
-  
-@endsection
+
+
+
+
+
+
