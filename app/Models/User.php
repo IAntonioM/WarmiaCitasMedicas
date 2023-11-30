@@ -37,6 +37,18 @@ class User extends Authenticatable
         $user = User::where('dni', $dni)->first();
         return $user;
     }
+    public static function actualizarUsuario($userId, $nombres, $apellidos, $dni, $cargo, $password)
+    {
+        // Verifica si $password tiene un valor antes de realizar la actualización
+        if ($password !== null) {
+            DB::update('UPDATE users SET nombres = ?, apellidos = ?, dni = ?, cargo = ?, password = ? WHERE id = ?', [$nombres, $apellidos, $dni, $cargo, $password, $userId]);
+        } else {
+            // Si $password es NULL, omite la actualización de la columna password
+            DB::update('UPDATE users SET nombres = ?, apellidos = ?, dni = ?, cargo = ? WHERE id = ?', [$nombres, $apellidos, $dni, $cargo, $userId]);
+        }
+
+        return User::find($userId);
+    }
     public static function eliminarUsuario($id)
     {
         DB::delete('DELETE FROM users WHERE id = ?', [$id]);

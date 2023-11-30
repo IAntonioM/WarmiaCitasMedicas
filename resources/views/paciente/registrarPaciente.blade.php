@@ -17,7 +17,6 @@
                             id="nombres" 
                             name="nombres" 
                             value="{{ old('nombres') }}" 
-                            required
                         >
                         @error('nombres')
                             <p class="text-danger">{{ $message }}</p>
@@ -32,7 +31,6 @@
                             id="apellidos" 
                             name="apellidos" 
                             value="{{ old('apellidos') }}" 
-                            required
                         >
                         @error('apellidos')
                             <p class="text-danger">{{ $message }}</p>
@@ -46,7 +44,6 @@
                             class="form-control @error('dni') border border-danger @enderror" 
                             id="dni" 
                             name="dni" 
-                            required
                         >
                         @error('dni')
                             <p class="text-danger">{{ $message }}</p>
@@ -77,7 +74,6 @@
                             id="direccion" 
                             name="direccion" 
                             value="{{ old('direccion') }}" 
-                            required
                         >
                         @error('direccion')
                             <p class="text-danger">{{ $message }}</p>
@@ -92,7 +88,6 @@
                             id="telefono" 
                             name="telefono" 
                             value="{{ old('telefono') }}" 
-                            required
                         >
                         @error('telefono')
                             <p class="text-danger">{{ $message }}</p>

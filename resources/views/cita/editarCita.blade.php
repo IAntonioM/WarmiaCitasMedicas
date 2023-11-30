@@ -96,13 +96,14 @@
 
 
 @endsection
-@section('script')  
-
-    <script>
-         function buscarCliente() {
+@section('script') 
+<script>
+    let appURL = "{{ $appURL }}";
+</script>
+<script>
+    function buscarCliente() {
         var dni = document.getElementById('dni').value;
-
-        axios.get('http://localhost:8000/paciente/buscar/' + dni)
+        axios.get(appURL+'paciente/buscar/' + dni)
             .then(function (response) {
                 paciente = response.data;
                 if (typeof paciente.nombres !== 'undefined' && paciente.nombres !== null) {
@@ -111,7 +112,7 @@
                     document.getElementById('idPaciente').value = paciente.id;
                     document.getElementById('mensaje-error').innerHTML = '';
                 } else {
-                    document.getElementById('mensaje-error').innerHTML = '<p class="text-danger">No se encontró paciente con ese DNI</p>';
+                    document.getElementById('mensaje-error').innerHTML = '<p class="text-danger">No se encontró paciente con ese DNI <a class="" data-bs-toggle="modal" data-bs-target="#create">registrar Paciente?</a></p>';
                 }
             })
             .catch(function (error) {
@@ -119,12 +120,40 @@
             });
     }
 
+    document.addEventListener('DOMContentLoaded', function () {
+        let formulario = document.querySelector("form");
+        const calendarEl = document.getElementById('calendar');
+        let idMedico = formulario.querySelector('#medico').value;
+        let calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: "es",
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,listWeek'
+            },
+            events: appURL+"cita/cita-calendario/Pendiente/" + idMedico,
+            dateClick: function (info) {
+                formulario.fecha.value = info.dateStr;
+            },
+            validRange: {
+                start: new Date().toISOString().split("T")[0],
+            },
+            eventContent: function (arg) {
+                return {
+                    html: `
+                        <div style="background-color: ${arg.event.backgroundColor}; color: ${arg.event.textColor}; padding: 5px;">
+                            <div>${formatHour(arg.event.start)} ${arg.event.title}</div>
+                        </div>`,
+                };
+            },
+        });
+        calendar.render();
 
-        document.addEventListener('DOMContentLoaded', function () {
-            let formulario = document.querySelector("form");
-            const calendarEl = document.getElementById('calendar');
-
-            const calendar = new FullCalendar.Calendar(calendarEl, {
+        document.getElementById("medico").addEventListener("change", function () {
+            idMedico = this.value;
+            calendar.destroy();
+            calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: "es",
                 headerToolbar: {
@@ -132,37 +161,29 @@
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,listWeek'
                 },
-                events: "http://localhost:8000/cita/cita-calendario/Pendiente/0",
+                events: appURL+"cita/cita-calendario/Pendiente/" + idMedico,
                 dateClick: function (info) {
-                    formulario.fecha.value=info.dateStr;
+                    formulario.fecha.value = info.dateStr;
                 },
                 validRange: {
-                    start: new Date().toISOString().split("T")[0],
+                    start: new Date().toISOString().split("T")[0], 
                 },
                 eventContent: function (arg) {
                     return {
                         html: `
-                        <div style="background-color: ${arg.event.backgroundColor}; color: ${arg.event.textColor}; padding: 5px;">
-                        <div>${formatHour(arg.event.start)} ${arg.event.title}</div>
-                        </div>`,
+                            <div style="background-color: ${arg.event.backgroundColor}; color: ${arg.event.textColor}; padding: 5px;">
+                                <div>${formatHour(arg.event.start)} ${arg.event.title}</div>
+                            </div>`,
                     };
                 },
             });
             calendar.render();
-            
-            document.getElementById("btnGuardar").addEventListener("click", function () {
-                const datos = new FormData(formulario);
-                axios.post("http://localhost:8000/cita", datos)
-                    .then((respuesta) => {
-                        calendar.refetchEvents();
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    });
-            });
+            console.log('idMedico seleccionado:', idMedico);
         });
+
+       
         function formatHour(date) {
-        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
-    </script>
-@endsection
+            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+    });
+</script>

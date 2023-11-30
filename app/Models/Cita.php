@@ -30,6 +30,26 @@ class Cita extends Model
             })
             ->paginate(8);
     }
+    public static function obtenerTodasLasCitas($estado = 'Todos', $idMedico = 0) {
+        $citasQuery = Cita::with(['paciente', 'medico.user'])
+            ->select(
+                'citas.*',
+                'pacientes.nombres as nombre_paciente',
+                'pacientes.apellidos as apellido_paciente',
+                'pacientes.dni'
+            )
+            ->join('pacientes', 'citas.paciente_id', '=', 'pacientes.id');
+    
+        if ($estado !== 'Todos') {
+            $citasQuery->where('estado', $estado);
+        }
+    
+        if ($idMedico > 0) {
+            $citasQuery->where('medico_id', $idMedico);
+        }
+    
+        return $citasQuery->get();
+    }
     public static function obtenerCitaPorEstado($estado, $idMedico) {
         return Cita::with(['paciente', 'medico.user'])
             ->select(
@@ -66,6 +86,7 @@ class Cita extends Model
             $medico_id, $paciente_id, $fecha_hora, $motivo_consulta, $estado
         ]);
     }
+    
     public static function actualizarCita($id, $fecha, $hora, $medico_id, $estado, $motivo_consulta)
     {
         DB::table('citas')

@@ -1,9 +1,7 @@
 @extends('layouts.sessionApp')
 @section('titulo')
-    Gestion de Citas 
-
+    Gestión de Citas 
 @endsection
-
 @section('contenido')
     <hr>
     <div class="d-md-flex justify-content-md-end">
@@ -12,9 +10,7 @@
             <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
         </form>
     </div>
-    
     <div class="mb-4">
-        
         <a class="btn btn-primary" href="{{route('nuevaCita')}}">Nueva Cita <i class="fa-solid fa-square-plus"></i></a>
         <a class="btn btn-success" href="{{route('gestionCitas')}}">Recargar <i class="fa-solid fa-rotate-right"></i></a>
     </div>
@@ -51,10 +47,8 @@
             <td> {{ \Carbon\Carbon::parse($cita->fecha_hora)->format('Y-m-d') }}</td>
             <td>{{ \Carbon\Carbon::parse($cita->fecha_hora)->format('h:i a') }}</td>
             <td>
-
                 <a href="cita/editar/{{ $cita->id }}" class="btn btn-warning">Editar <i class="fas fa-edit"></i></a>
                 <button class="btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#detalle{{ $cita->id }}">Detalles <i class="fa-solid fa-circle-info"></i></button>
-                
             </td>
         </tr>
         @include('cita.verDetallesCita')
@@ -66,7 +60,5 @@
             <td class="row" colspan="1"> {{$citas->links()}} </td>
         </tr>
     </tfoot>
-
-
 @endsection
 

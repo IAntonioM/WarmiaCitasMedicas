@@ -31,9 +31,7 @@ class PacienteController extends Controller
             'nombres' => 'required|string',
             'apellidos' => 'required|string',
             'fechaNacimiento' => 'required|date',
-            'direccion' => 'required|string',
             'dni' => 'required|unique:pacientes|numeric|digits:8',
-            'telefono' => 'required|string',
         ]);
     
         $validator->stopOnFirstFailure(); 

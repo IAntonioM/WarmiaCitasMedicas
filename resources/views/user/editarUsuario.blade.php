@@ -9,6 +9,8 @@
             <form class="input-box"  action="" method="POST">
               <form class="input-box"  action="{{route('editarUsuario')}}" method="POST">
                   @csrf
+                  @method('PUT')
+                  <input type="hidden" name="userId" value="{{$usuario->id}}">
                   <div class="form-floating mb-3">
                     <input
                       type="text" 
@@ -51,16 +53,14 @@
                   <div class="mb-3">
                     <label for="cargo" class="form-label">Cargo</label>
                     <select class="form-select" name="cargo" required>
-                        <option value="none" @if($usuario->cargo === 'none') selected @endif>Seleccione...</option>
                         <option value="Administrador" @if($usuario->cargo === 'Administrador') selected @endif>Administrador</option>
                         <option value="Medico" @if($usuario->cargo === 'Medico') selected @endif>Medico</option>
                         <option value="Recepcionista" @if($usuario->cargo === 'Recepcionista') selected @endif>Recepcionista</option>
                     </select>
                   </div>
                   <div class="mb-3" id="especialidad-container">
-                    <label for="especialidad" class="form-label">Especialidad</label>
+                    <label for="especialidad" class="form-label">Especialidad (Solo para Medico*) </label>
                     <select class="form-select" id="especialidad" name="especialidad">
-                        <option value="">Seleccione una especialidad</option>
                         @foreach ($especialidades as $especialidad)
                             <option value="{{ $especialidad->id }}" @if($usuario->especialidad_id === $especialidad->id) selected @endif>
                                 {{ $especialidad->nombre }}
@@ -68,10 +68,7 @@
                         @endforeach
                     </select>
                 </div>
-                  
-                  
                     <button class="btn btn-lg btn-primary btn-login mb-2" type="submit">Registrar usuario</button>
-                 
                 </form>
             </form>
           </div>

@@ -1,9 +1,7 @@
 @extends('layouts.sessionApp')
 @section('titulo')
-    Gestion de Pacientes
-    
+    Gestión de Pacientes
 @endsection
-
 @section('contenido')
     <hr>
     <div class="d-md-flex justify-content-md-end">
@@ -56,16 +54,5 @@
             </tfoot>
         </div>
     </div>
-    
-    
     @include('paciente.registrarPaciente')
-@endsection
-@section('script')
-<script>
-    @if ($errors->any() || session('open_modal'))
-        $(document).ready(function() {
-            $('#create').modal('show');
-        });
-    @endif
-</script>
 @endsection

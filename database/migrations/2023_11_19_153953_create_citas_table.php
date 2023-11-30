@@ -16,7 +16,7 @@ class CreateCitasTable extends Migration
             $table->string('motivo_consulta');
             $table->enum('estado', ['Pendiente', 'Confirmada', 'Atendida', 'Cancelada']);
             $table->foreign('paciente_id')->references('id')->on('pacientes');
-            $table->foreign('medico_id')->references('id')->on('users')->where('cargo', 'Medico');
+            $table->foreign('medico_id')->references('id')->on('medicos');
         });
     }
 

@@ -14,9 +14,7 @@ use Illuminate\Support\Facades\Route;
 
 
 //<----pagina inicial---->
-Route::get('', function () {
-    return view('user.login');
-});
+Route::get('',[AuthController::class,'login'])->name('login');
 
 //<----auth---->
 Route::get('/login',[AuthController::class,'login'])->name('login');

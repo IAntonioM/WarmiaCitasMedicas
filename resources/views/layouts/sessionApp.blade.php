@@ -32,7 +32,6 @@
                 <h1 class="fs-4">
                     <img class="logo" src="{{ asset('img/logo-app.jpg') }}" alt="" width="200" height="70">
                 </h1>
-                
             </div>
             <ul class="list-unstyled px-2">
                 <li class="{{ request()->is('inicio') ? 'active' : '' }}">
@@ -40,7 +39,6 @@
                         <i class="fa fa-home"></i> Inicio
                     </a>
                 </li>
-                
                 @role('Administrador')
                 <li class="mt-3">
                     <hr class="h-color mx-2">
@@ -185,7 +183,13 @@
             @endif
         </script>
     @endif
-
+    <script>
+        @if (session('open_modal'))
+            $(document).ready(function() {
+                $('#create').modal('show');
+            });
+        @endif
+    </script>
     @yield('script')
 </body>
 </html>

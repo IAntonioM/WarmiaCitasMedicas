@@ -10,6 +10,7 @@ use App\Models\Paciente;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Validator;
 class CitaController extends Controller
 {
     public function __construct(){
@@ -24,60 +25,77 @@ class CitaController extends Controller
     public function indexRegistrar()
     {
         $medicos = Medico::obtenerMedicos();
-        return view("cita.registrarCita", ['medicos' => $medicos]);
+        $appURL = config('app.url');
+        return view("cita.registrarCita", compact('medicos', 'appURL'));
     }
     public function store(Request $request){
+        $validator = Validator::make($request->all(), [
+            'medico' => 'required|numeric',
+            'idPaciente' => 'required|numeric',
+            'hora' => 'required|date_format:H:i',
+            'fecha' => 'required|date',
+            'motivo_consulta' => 'required|string',
+        ]);
+    
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('message', 'Error al registrar la cita. Verifica los campos e inténtalo de nuevo.')
+                ->with('type', 'error');
+        }
+    
         $medico_id = $request->input('medico');
         $paciente_id = $request->input('idPaciente');
         $hora = $request->input('hora');
-        $fecha_hora = $request->input('fecha'). " " . $hora;
+        $fecha_hora = $request->input('fecha') . " " . $hora;
         $motivo_consulta = $request->input('motivo_consulta');
         $estado = "Pendiente";
+    
         Cita::crearCita($medico_id, $paciente_id, $fecha_hora, $motivo_consulta, $estado);
-        }
+    
+        return redirect()->route('gestionCitas')
+            ->with('message', 'Cita registrada exitosamente')
+            ->with('type', 'success');
+    }
+
         public function citasCalendario($estado, $idMedico){
             $events = array();
     
-            $citasQuery = Cita::query();
-        
-            // Verificar si se proporciona un estado específico
-            if ($estado !== 'Todos') {
-                $citasQuery->where('estado', $estado);
-            }
-        
-            // Verificar si se proporciona un idMedico específico
-            if ($idMedico > 0) {
-                // Si es mayor que 0, aplicar el filtro por medico_id
-                $citasQuery->where('medico_id', $idMedico);
-            }
-        
-            // Obtener todas las citas según los filtros aplicados
-            $citas = $citasQuery->get();
-            foreach($citas as $cita){
-                switch($cita->estado){
+            $citas = Cita::obtenerTodasLasCitas($estado, $idMedico);
+            
+            foreach ($citas as $cita) {
+                switch ($cita->estado) {
                     case 'Pendiente':
-                        $color = '#FFFF00';// Akarillo
-                        $textColor= "#000";
+                        $color = '#FFFF00'; // Amarillo
+                        $textColor = "#000";
                         break;
                     case 'Cancelada':
                         $color = '#FF0000'; // Rojo
-                        $textColor= "#fff";
+                        $textColor = "#fff";
                         break;
                     case 'Confirmada':
                         $color = '#008000'; // Verde
-                        $textColor= "#fff";
+                        $textColor = "#fff";
                         break;
                     case 'Atendido':
                         $color = '#0000FF'; // Azul
-                        $textColor= "#fff";
+                        $textColor = "#fff";
                         break;
                     default:
                         $color = '#000000'; // Por defecto, puede cambiar según tus necesidades
                 }
+            
                 $events[] = [
-                    'title' => $cita->estado,
+                    'title' => explode(" ", $cita->apellido_paciente)[0],
                     'start' => $cita->fecha_hora,
                     'idCita' => $cita->id,
+                    'apellidos' => $cita->apellido_paciente,
+                    'nombres' => $cita->nombre_paciente,
+                    'fecha' => $cita->fecha_hora,
+                    'hora' => $cita->fecha_hora,
+                    'estado' => $cita->estado,
+                    'dni' => $cita->dni,
                     'end' => $cita->fecha_hora,
                     'color' => $color,
                     'textColor' => $textColor,
@@ -143,11 +161,12 @@ class CitaController extends Controller
         }
     }
     public function editarCita($id){
+        $appURL = config('app.url');
         $medicos = Medico::obtenerMedicos();
         $cita=Cita::obtenerCitasPorId($id);
         $cita[0]->fecha = Carbon::parse($cita[0]->fecha_hora)->format('Y-m-d');
         $cita[0]->hora = Carbon::parse($cita[0]->fecha_hora)->format('H:i');
-        return view('cita.editarCita')->with(['medicos'=> $medicos,'Cita' => $cita]);
+        return view('cita.editarCita')->with(['medicos'=> $medicos,'Cita' => $cita,'appURL'=>$appURL]);
 
     }public function update(Request $request){
         $id = $request->input('idCita');
@@ -157,7 +176,8 @@ class CitaController extends Controller
         $estado = $request->input('estado');
         $motivo_consulta = $request->input('motivo_consulta');
         Cita::actualizarCita($id, $fecha, $hora, $medico_id, $estado, $motivo_consulta);
-        return redirect()->route('gestionCitas')->with('success', 'Cita actualizada exitosamente');
+        
+        return redirect()->route('gestionCitas')->with('message', 'Cita actualizada correctamente')->with('type', 'info');
    
     }
    
