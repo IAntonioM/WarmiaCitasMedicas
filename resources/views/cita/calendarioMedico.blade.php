@@ -15,6 +15,7 @@
 @section('contenido')
 <hr>
 <div class="row">
+    <input type="hidden" id="IdUsuario" name="" value=" {{auth()->user()->id}} ">
     <div class="col"></div>
     <div class="col-7">
         <div id="calendar"></div>
@@ -32,6 +33,7 @@
 @section('script')  
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            let idUser = document.querySelector("#IdUsuario").value;
             let formulario = document.querySelector("form");
             const calendarEl = document.getElementById('calendar');
             const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -42,7 +44,7 @@
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,listWeek'
                 },
-                events: "http://localhost:8000/cita/cita-calendario/Todos/0",
+                events: "http://localhost:8000/cita/medico-calendario/"+idUser,
                 dateClick: function (info) {
                     formulario.reset();
                     formulario.start.value=info.dateStr;
@@ -60,19 +62,6 @@
                 },
             });
             calendar.render();
-            document.getElementById("btnGuardar").addEventListener("click", function () {
-                const datos = new FormData(formulario);
-                const colorValue = document.getElementById("color").value;
-                console.log("Color seleccionado:", colorValue);
-                axios.post("http://localhost:8000/calendario", datos)
-                    .then((respuesta) => {
-                        calendar.refetchEvents();
-                        $("#evento").modal("hide");
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    });
-            });
         });
         function formatHour(date) {
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });

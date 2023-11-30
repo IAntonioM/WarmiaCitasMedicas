@@ -1,6 +1,6 @@
 @extends('layouts.sessionApp')
 @section('titulo')
-    Gestion de Citas
+    Gestion de Citas 
 
 @endsection
 
@@ -8,20 +8,25 @@
     <hr>
     <div class="d-md-flex justify-content-md-end">
         <form action="" method="GET" class="d-flex align-items-center">
-            <input type="text" name="busqueda" class="form-control">
+            <input type="text" name="busqueda" id="busqueda" class="form-control">
             <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
         </form>
     </div>
+    
     <div class="mb-4">
-        <a class="btn btn-primary" href="{{route('registrarCita')}}">Agregar Cita <i class="fa-solid fa-square-plus"></i></a>
+        
+        <a class="btn btn-primary" href="{{route('nuevaCita')}}">Nueva Cita <i class="fa-solid fa-square-plus"></i></a>
+        <a class="btn btn-success" href="{{route('gestionCitas')}}">Recargar <i class="fa-solid fa-rotate-right"></i></a>
     </div>
     <table class="table">
         <thead>
             <tr>
-                <th>Código</th>
-                <th>Fecha y Hora</th>
+                <th>ID</th>
                 <th>Paciente</th>
+                <th>DNI</th>
                 <th>Estado</th>
+                <th>Fecha</th>
+                <th>Hora</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -29,17 +34,39 @@
             @foreach ($citas as $cita)
         <tr>
             <td>{{ $cita->id }}</td>
-            <td>{{ $cita->fecha }}</td>
-            <td>{{ $cita->nombres }} {{ $cita->apellidos }}</td>
-            <td>{{ $cita->estado }}</td>
+            <td>{{ $cita->nombre_paciente }} {{ $cita->apellido_paciente }}</td>
+            <td>{{ $cita->dni }}</td>
+            <td><p class="btn 
+                @if($cita->estado == 'Pendiente')
+                    btn-warning
+                @elseif($cita->estado == 'Confirmada')
+                    btn-success
+                @elseif($cita->estado == 'Atendida')
+                    btn-primary
+                @elseif($cita->estado == 'Cancelada')
+                    btn-danger
+                @endif">
+                {{ $cita->estado }}
+            </td>
+            <td> {{ \Carbon\Carbon::parse($cita->fecha_hora)->format('Y-m-d') }}</td>
+            <td>{{ \Carbon\Carbon::parse($cita->fecha_hora)->format('h:i a') }}</td>
             <td>
-                <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modal1">Detalles <i class="far fa-eye"></i></button>
+
                 <a href="cita/editar/{{ $cita->id }}" class="btn btn-warning">Editar <i class="fas fa-edit"></i></a>
+                <button class="btn btn-info" type="button" data-bs-toggle="modal" data-bs-target="#detalle{{ $cita->id }}">Detalles <i class="fa-solid fa-circle-info"></i></button>
+                
             </td>
         </tr>
+        @include('cita.verDetallesCita')
         @endforeach
         </tbody>
     </table>
-    
-    @include('cita.verDetallesCita')
+    <tfoot>
+        <tr>
+            <td class="row" colspan="1"> {{$citas->links()}} </td>
+        </tr>
+    </tfoot>
+
+
 @endsection
+

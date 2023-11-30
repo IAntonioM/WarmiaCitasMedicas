@@ -24,7 +24,7 @@ Inicio de Sesion
                     <p class="text-danger">{{session('mensaje')}}</p>
               @endif
               <div class="form-floating mb-3">
-                <input type="text" class="form-control" name="dni" id="dni" placeholder="dni">
+                <input type="text" class="form-control" name="dni" id="dni" placeholder="dni" maxlength="8">
                 <label for="dni">DNI *</label>
                 @error('dni')
                     <p class="text-danger">{{$message}}</p>
@@ -39,9 +39,6 @@ Inicio de Sesion
               </div>
               <div class="d-grid">
                 <button class="btn btn-lg btn-primary btn-login mb-2" type="submit">Iniciar Sesión</button>
-              <div class="home">
-                <span>Volver al Inicio? <a href="/">Presione Aquí</a> </span>
-              </div>
             </form>
           </div>
         </div>

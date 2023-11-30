@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class Paciente extends Model
@@ -20,20 +21,49 @@ class Paciente extends Model
         'direccion',
         'telefono',
     ];
-
-    public static function crearPaciente($nombres, $apellidos, $dni, $fechaNacimiento, $direccion, $telefono)
+    public static function listarPacientes($busqueda)
     {
-        DB::insert('INSERT INTO pacientes (nombres, apellidos, dni, fechaNacimiento, direccion, telefono) VALUES (?, ?, ?, ?, ?, ?)', [$nombres, $apellidos, $dni, $fechaNacimiento, $direccion, $telefono]);
+        $busqueda="prue";
+        // Realizar la consulta SQL
+        $pacientes = DB::select("SELECT * FROM pacientes 
+            WHERE id LIKE :busqueda 
+            OR nombres LIKE :busqueda 
+            OR apellidos LIKE :busqueda 
+            OR dni LIKE :busqueda", ['busqueda' => '%' . $busqueda . '%']);
+        $perPage = 5;
+        $page = request()->get('page', 1);
+        $offset = ($page - 1) * $perPage;
+        $pacientesPaginados = array_slice($pacientes, $offset, $perPage);
+        $pacientesPaginados = new LengthAwarePaginator($pacientesPaginados, count($pacientes), $perPage, $page);
+        return $pacientesPaginados;
     }
-
-    public static function listarPacientes()
+        public static function crearPaciente($nombres, $apellidos, $dni, $fechaNacimiento, $direccion, $telefono)
+        {
+            DB::insert('INSERT INTO pacientes (nombres, apellidos, dni, fechaNacimiento, direccion, telefono) VALUES (?, ?, ?, ?, ?, ?)', [$nombres, $apellidos, $dni, $fechaNacimiento, $direccion, $telefono]);
+        }
+        public static function actualizarPaciente($id, $nombres, $apellidos, $dni, $fechaNacimiento, $direccion, $telefono)
+        {
+            DB::update('UPDATE pacientes SET nombres = ?, apellidos = ?, dni = ?, fechaNacimiento = ?, direccion = ?, telefono = ? WHERE id = ?', [
+                $nombres,
+                $apellidos,
+                $dni,
+                $fechaNacimiento,
+                $direccion,
+                $telefono,
+                $id,
+            ]);
+        }
+        public static function eliminarPaciente($id)
+        {
+            DB::delete('DELETE FROM pacientes WHERE id = ?', [$id]);
+        }
+        
+        public static function buscarPacientePorDni($id)
+        {
+            return DB::select('SELECT * FROM pacientes WHERE id = ? LIMIT 1', [$id]);
+        }
+        public function citas()
     {
-        return DB::select('SELECT * FROM pacientes');
+        return $this->hasMany(Cita::class, 'paciente_id');
     }
-    public static function buscarPacientePorDni($dni)
-    {
-        $result = DB::selectOne('SELECT * FROM pacientes WHERE dni = ? LIMIT 1', [$dni]);
-        return $result ? new Paciente((array) $result) : null;
-    }
-
 }

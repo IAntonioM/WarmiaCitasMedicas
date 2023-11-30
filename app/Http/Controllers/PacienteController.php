@@ -2,24 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cita;
 use App\Models\Paciente;
 use Illuminate\Http\Request;
+use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class PacienteController extends Controller
 {
-    public function index(){
-        $pacientes = Paciente::listarPacientes();
-        return view("paciente.gestionPacientes", compact('pacientes'));
+    public function __construct(){
+        $this->middleware("auth");
     }
+
+    public function index(Request $request){  
+        $busqueda=$request->busqueda;  
+        $pacientes = Paciente::where('id', 'LIKE', '%' . $busqueda . '%')
+                            ->orWhere('nombres', 'LIKE', '%' . $busqueda . '%')
+                            ->orWhere('apellidos', 'LIKE', '%' . $busqueda . '%')
+                            ->orWhere('dni', 'LIKE', '%' . $busqueda . '%')
+                            ->paginate(7);
+                    
+        return view("paciente.gestionPacientes", compact('pacientes','busqueda'));
+    }
+
     public function store(Request $request){
-        $request->validate([
-            'nombres' => 'required|string|max:255',
-            'apellidos' => 'required|string|max:255',
-            'dni' => 'required|numeric|unique:pacientes',
+        $validator = Validator::make($request->all(), [
+            'nombres' => 'required|string',
+            'apellidos' => 'required|string',
             'fechaNacimiento' => 'required|date',
-            'direccion' => 'nullable|string|max:255',
-            'telefono' => 'nullable|string|max:20',
+            'direccion' => 'required|string',
+            'dni' => 'required|unique:pacientes|numeric|digits:8',
+            'telefono' => 'required|string',
         ]);
+    
+        $validator->stopOnFirstFailure(); 
+    
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('message', 'Error al registrar el paciente. Verifica los campos e inténtalo de nuevo.')->with('type', 'error')
+                ->with('type', 'error')
+                ->with('open_modal', true);
+        }
 
         $nombres = $request->input('nombres');
         $apellidos = $request->input('apellidos');
@@ -27,33 +53,35 @@ class PacienteController extends Controller
         $fechaNacimiento = $request->input('fechaNacimiento');
         $direccion = $request->input('direccion');
         $telefono = $request->input('telefono');
-
         Paciente::crearPaciente($nombres, $apellidos, $dni, $fechaNacimiento, $direccion, $telefono);
-
-        return redirect()->route('gestionPacientes')->with('success','Se registro el usuario exitosamente');
-        
-
+        return back()->with('message', 'Paciente registrado exitosamente')->with('type', 'success');
     }
 
-    public function obtenerPaciente($id)
-    {
-        $paciente = Paciente::find($id);
+    public function update(Request $request){
+        $id = $request->input('id');
+        $nombres = $request->input('nombres');
+        $apellidos = $request->input('apellidos');
+        $dni = $request->input('dni');
+        $fechaNacimiento = $request->input('fechaNacimiento');
+        $direccion = $request->input('direccion');
+        $telefono = $request->input('telefono');
+        Paciente::actualizarPaciente($id, $nombres, $apellidos, $dni, $fechaNacimiento, $direccion, $telefono);
+        return redirect()->route('gestionPacientes')->with('message', 'Paciente actualizado correctamente')->with('type', 'info');
+    }
+
+    public function destroy(Request $request){
+        $id = $request->input('id');
+        $citas = Cita::where('paciente_id', $id)->get();
+        if ($citas->isNotEmpty()) {
+            return redirect()->route('gestionPacientes')->with('message', 'No se puede eliminar al paciente, tiene citas asociadas.')->with('type', 'error');
+        }
+        Paciente::eliminarPaciente($id);
+        return redirect()->route('gestionPacientes')->with('message', 'Paciente eliminado correctamente')->with('type', 'info');
+    }
+
+    public function search($dni) {
+        $paciente = Paciente::where('dni', $dni)->first();
         return response()->json($paciente);
     }
-
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'nombres' => 'required|string|max:255',
-            // Agrega las validaciones para otros campos
-        ]);
-
-        $paciente = Paciente::find($id);
-        $paciente->nombres = $request->input('nombres');
-        // Actualiza otros campos aquí
-
-        $paciente->save();
-
-        return redirect()->route('paciente.index')->with('success', 'Paciente actualizado exitosamente.');
-    }
+    
 }

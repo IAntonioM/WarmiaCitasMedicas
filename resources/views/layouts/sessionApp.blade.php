@@ -16,8 +16,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,600&display=swap" rel="stylesheet">
-    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5/main.css' rel='stylesheet' />
-
+    {{-- calendario --}}
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('img/favicon-16x16.png') }}">
     @yield('style')
 </head>
 <body class="">
@@ -28,73 +30,120 @@
             <div class="header-box pt-3 px-4 pb-4 d-flex justify-content-between">
                 {{-- logo --}}
                 <h1 class="fs-4">
-                    <img class="logo" src="{{ asset('img/logo-app.jpg') }}" alt="">
+                    <img class="logo" src="{{ asset('img/logo-app.jpg') }}" alt="" width="200" height="70">
                 </h1>
-                <button class="btn d-md-none d-block close-btn px-1 py-0 text-white"><i class="fa fa-bars"></i></button>
+                
             </div>
             <ul class="list-unstyled px-2">
                 <li class="{{ request()->is('inicio') ? 'active' : '' }}">
-                    <a href={{ route('inicio') }} class="text-decoration-none px-3 py-2 d-block">
-                        <i class="fa fa-home"></i>
-                        Inicio
+                    <a href="{{ route('inicio') }}" class="text-decoration-none px-3 py-2 d-block">
+                        <i class="fa fa-home"></i> Inicio
                     </a>
                 </li>
+                
+                @role('Administrador')
+                <li class="mt-3">
+                    <hr class="h-color mx-2">
+                    <p class="px-3 d-block">Control</p>
+                    
+                    <li class="{{ request()->is('usuario') ? 'active' : '' }}">
+                        <a href="{{ route('gestionUsuarios') }}" class="text-decoration-none px-3 py-2 d-block">
+                            <i class="fa fa-list"></i> Gestion de Usuarios
+                        </a>
+                    </li>
+                </li>
+                @endrole
+                
                 @role('Recepcionista')
-                <hr class="h-color mx-2">
-                <p class="px-3 d-block">Control</p>
-                <li class="{{ request()->is('cita','cita/*') ? 'active' : '' }}">
-                    <a href="{{route('gestionCitas')}}" class="text-decoration-none px-3 py-2 d-block">
-                    <i class="fa fa-list"></i>
-                    Gestion de Citas</a>
+                <li class="mt-3">
+                    <hr class="h-color mx-2">
+                    <p class="px-3 d-block">Control</p>
+                    <li class="{{ request()->is('paciente') ? 'active' : '' }}">
+                        <a href="{{ route('gestionPacientes') }}" class="text-decoration-none px-3 py-2 d-block">
+                            <i class="fa-solid fa-hospital-user"></i> Gestion de Pacientes
+                        </a>
+                    </li>
+                    <li class="{{ request()->is('cita','cita/*') ? 'active' : '' }}">
+                        <a href="{{ route('gestionCitas') }}" class="text-decoration-none px-3 py-2 d-block">
+                            <i class="fa-solid fa-calendar-check"></i> Gestion de Citas
+                        </a>
+                    </li>
                 </li>
-                <li class="{{ request()->is('paciente') ? 'active' : '' }}">
-                    <a href="{{route('gestionPacientes')}}" class="text-decoration-none px-3 py-2 d-block">
-                    <i class="fa fa-list"></i>
-                    Gestion de Pacientes</a>
+                @endrole
+
+                @role('Medico')
+                <li class="mt-3">
+                    <hr class="h-color mx-2">
+                    <p class="px-3 d-block">Control</p>
+                    <li class="{{ request()->is('paciente') ? 'active' : '' }}">
+                        <a href="{{ route('gestionPacientes') }}" class="text-decoration-none px-3 py-2 d-block">
+                            <i class="fa-solid fa-hospital-user"></i> Gestion de Pacientes
+                        </a>
+                    </li>
+                    <li class="{{ request()->is('sala-espera','sala-espera/*') ? 'active' : '' }}">
+                        <a href="{{ route('salaDeEspera') }}" class="text-decoration-none px-3 py-2 d-block">
+                            <i class="fa-solid fa-hourglass-start"></i> Sala de Espera
+                        </a>
+                    </li>
                 </li>
-                <br>
-                <br>
+                @endrole
+                
+                @role('Medico')
+                <li class="mt-3">
+                    <hr class="h-color mx-2">
+                    <p class="px-3 d-block">Documentos</p>
+                    
+                    <li class="{{ request()->is('historias-clinicas','historias-clinicas/*') ? 'active' : '' }}">
+                        <a href="{{ route('historialClinico') }}" class="text-decoration-none px-3 py-2 d-block">
+                            <i class="fa-solid fa-folder-open"></i> Historias Clinicas
+                        </a>
+                    </li>
+                </li>
+                @endrole
+                
+                @role('Recepcionista|Administrador')
+                <li class="mt-3">
+                    <hr class="h-color mx-2">
+                    <p class="px-3 d-block">Otros</p>
+                    
+                    <li class="{{ request()->is('calendario') ? 'active' : '' }}">
+                        <a href="{{ route('calendarioCitas') }}" class="text-decoration-none px-3 py-2 d-block">
+                            <i class="fa fa-calendar"></i> Calendario de Citas
+                        </a>
+                    </li>
+                </li>
                 @endrole
                 @role('Medico')
-                <hr class="h-color mx-2">
-                <p class="px-3 d-block">Documentos </p>
-                <li class="{{ request()->is('respaldo-medico','respaldo-medico/crear') ? 'active' : '' }}">
-                    <a href="{{route('respaldoMedico')}}" class="text-decoration-none px-3 py-2 d-block">
-                    <i class="fa-solid fa-folder-open"></i>
-                    Respaldo Medico</a>
+                <li class="mt-3">
+                    <hr class="h-color mx-2">
+                    <p class="px-3 d-block">Otros</p>
+                    
+                    <li class="{{ request()->is('calendario-medico') ? 'active' : '' }}">
+                        <a href="{{ route('medicoCalendario') }}" class="text-decoration-none px-3 py-2 d-block">
+                            <i class="fa fa-calendar"></i> Calendario Medico
+                        </a>
+                    </li>
                 </li>
-                <br>
-                <br>
                 @endrole
-                
-                <hr class="h-color mx-2">
-                <p class="px-3 d-block">Otros</p>
-                
-                <li class="{{ request()->is('calendario') ? 'active' : '' }}">
-                    <a href="{{route("calendarioCitas")}}" class="text-decoration-none px-3 py-2 d-block">
-                        <i class="fa fa-calendar"></i>
-                        Calendario de Citas</a>
-                </li>
-                <br>
-                <br>
             </ul>
+            
             <hr class="h-color mx-2">
+            
             <ul class="list-unstyled px-2">
                 <li class="">
-                    <a href="{{route('cerrarSesion')}}" class="text-decoration-none px-3 py-2 d-block">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        Cerrar Sesion
+                    <a href="{{ route('cerrarSesion') }}" class="text-decoration-none px-3 py-2 d-block">
+                        <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesion
                     </a>
                 </li>
-
             </ul>
+            
 
         </div>
             {{-- Fin dashboard --}}
         <div class="content">
             <nav class="navbar navbar-expand-md navbar-light bg-light">
                 <div class="container-fluid">
-                    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent" style="height: 100px">
                         <ul class="navbar-nav mb-2 mb-lg-0">
                             <li class="nav-item">
                                 <p class="nav-link active" aria-current="page">Nombres: {{auth()->user()->nombres}} {{ auth()->user()->apellidos }}</p>
@@ -110,7 +159,9 @@
 
             <main class="dashboard-content px-3 pt-4">
                 <h4>@yield('titulo')</h4>
-                @yield('contenido')
+                <div>
+                    @yield('contenido')
+                </div>
             </main>
       </div>
   </div>
@@ -118,7 +169,23 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="{{ asset('js/dashboard.js') }}"></script>
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5/main.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    @if (Session::has('message') && Session::has('type'))
+        <script>
+            @php
+                $type = Session::get('type');
+                $message = Session::get('message');
+            @endphp
+            @if($type == 'success')
+                toastr.success("{{ $message }}");
+            @elseif($type == 'info')
+                toastr.info("{{ $message }}");
+            @elseif($type == 'error')
+                toastr.error("{{ $message }}");
+            @endif
+        </script>
+    @endif
+
     @yield('script')
 </body>
 </html>

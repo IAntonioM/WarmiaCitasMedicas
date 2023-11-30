@@ -11,19 +11,79 @@ class Cita extends Model
     use HasFactory;
     
     protected $table = 'citas';
-    protected $fillable = ['id','paciente_id', 'fecha', 'motivo', 'resultados_medicos', 'medico_id', 'hora_id', 'estado'];
+    protected $fillable = ['id','paciente_id', 'fecha_hora', 'descripcion', 'resultados_medicos', 'medico_id', 'estado'];
 
-    public static function obtenerDatosCita() {
-        return Cita::select('citas.*', 'pacientes.nombres', 'pacientes.apellidos', 'pacientes.dni')
+    public static function obtenerCitas($busqueda) {
+        return Cita::with(['paciente', 'medico.user'])
+            ->select(
+                'citas.*',
+                'pacientes.nombres as nombre_paciente',
+                'pacientes.apellidos as apellido_paciente',
+                'pacientes.dni',
+            )
+            ->join('pacientes', 'citas.paciente_id', '=', 'pacientes.id')
+            ->where(function ($query) use ($busqueda) {
+                $query->where('pacientes.id', 'LIKE', '%' . $busqueda . '%')
+                    ->orWhere('pacientes.nombres', 'LIKE', '%' . $busqueda . '%')
+                    ->orWhere('pacientes.apellidos', 'LIKE', '%' . $busqueda . '%')
+                    ->orWhere('pacientes.dni', 'LIKE', '%' . $busqueda . '%');
+            })
+            ->paginate(8);
+    }
+    public static function obtenerCitaPorEstado($estado, $idMedico) {
+        return Cita::with(['paciente', 'medico.user'])
+            ->select(
+                'citas.*',
+                'pacientes.nombres as nombre_paciente',
+                'pacientes.apellidos as apellido_paciente',
+                'pacientes.dni',
+            )
+            ->join('pacientes', 'citas.paciente_id', '=', 'pacientes.id')
+            ->when($idMedico, function ($query) use ($idMedico) {
+                $query->where('citas.medico_id', $idMedico);
+            })
+            ->where('citas.estado', $estado)
+            ->paginate(8);
+    }
+    
+    public static function obtenerCitasPorId($id) {
+        return DB::table('citas')
         ->join('pacientes', 'citas.paciente_id', '=', 'pacientes.id')
+        ->select(
+            'citas.*',
+            'pacientes.nombres as nombre_paciente',
+            'pacientes.apellidos as apellido_paciente',
+            'pacientes.dni'
+        )
+        ->where('citas.id', '=', $id)
         ->get();
     }
 
-    public static function crearCita($motivo, $paciente_id, $medico_id, $hora_id, $fecha)
+    public static function crearCita($medico_id, $paciente_id, $fecha_hora, $motivo_consulta, $estado)
     {
-        DB::statement("INSERT INTO citas (motivo, paciente_id, medico_id, hora_id, fecha, estado)
-            VALUES (?, ?, ?, ?, ?, ?)", [
-            $motivo, $paciente_id, $medico_id, $hora_id, $fecha, 'pendiente'
+        DB::statement("INSERT INTO citas (medico_id, paciente_id, fecha_hora, motivo_consulta, estado)
+            VALUES (?, ?, ?, ?, ?)", [
+            $medico_id, $paciente_id, $fecha_hora, $motivo_consulta, $estado
         ]);
+    }
+    public static function actualizarCita($id, $fecha, $hora, $medico_id, $estado, $motivo_consulta)
+    {
+        DB::table('citas')
+            ->where('id', $id)
+            ->update([
+                'fecha_hora' => $fecha." ".$hora,
+                'medico_id' => $medico_id,
+                'estado' => $estado,
+                'motivo_consulta' => $motivo_consulta,
+            ]);
+    }
+    public function paciente()
+    {
+        return $this->belongsTo(Paciente::class, 'paciente_id');
+    }
+
+    public function medico()
+    {
+        return $this->belongsTo(Medico::class, 'medico_id');
     }
 }

@@ -19,7 +19,10 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    
+     protected $table = 'users';
     protected $fillable = [
+        'id',
         'nombres',
         'apellidos',
         'dni',
@@ -30,8 +33,14 @@ class User extends Authenticatable
     public static function crearUsuario($nombres, $apellidos, $dni, $cargo, $password)
     {
         DB::insert('INSERT INTO users (nombres, apellidos, dni, cargo, password) VALUES (?, ?, ?, ?,?)', [$nombres, $apellidos, $dni, $cargo, $password]);
+        $user=null;
+        $user = User::where('dni', $dni)->first();
+        return $user;
     }
-
+    public static function eliminarUsuario($id)
+    {
+        DB::delete('DELETE FROM users WHERE id = ?', [$id]);
+    }
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -50,4 +59,8 @@ class User extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

@@ -10,15 +10,12 @@ class CreateCitasTable extends Migration
     {
         Schema::create('citas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('paciente_id');
-            $table->date('fecha');
-            $table->string('motivo');
-            $table->string('resultados_medicos')->nullable();
             $table->unsignedBigInteger('medico_id');
-            $table->unsignedBigInteger('hora_id');
-            $table->enum('estado', ['pendiente', 'completada', 'cancelada']);
+            $table->unsignedBigInteger('paciente_id');
+            $table->dateTime('fecha_hora');
+            $table->string('motivo_consulta');
+            $table->enum('estado', ['Pendiente', 'Confirmada', 'Atendida', 'Cancelada']);
             $table->foreign('paciente_id')->references('id')->on('pacientes');
-            $table->foreign('hora_id')->references('id')->on('horasAtencion');
             $table->foreign('medico_id')->references('id')->on('users')->where('cargo', 'Medico');
         });
     }
@@ -28,3 +25,9 @@ class CreateCitasTable extends Migration
         Schema::dropIfExists('citas');
     }
 }
+// $table->string("title",255);
+// $table->text("descripcion");
+// $table->string("color",20);
+// $table->string("textColor",20);
+// $table->dateTime("start");
+// $table->dateTime("end");

@@ -1,25 +1,15 @@
-@extends('layouts.app')
 
-@section('style')
-<link rel="stylesheet" href="{{ asset('css/login.css') }}">
-@endsection
-
-@section('titulo')
-Inicio de Sesion
-@endsection
-
-@section('contenido')
-    <div class="wrapper">
-      <div class="container main">
-        <div class="row ">
-          <div class="col-md-6 side-image">
-            <img src="{{asset('img/logo.jfif')}}" alt="">
+<div class="modal fade" id="create" tabindex="-1" aria-labelledby="addNewModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="addNewModalLabel">Registrar Usaurios</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="col-md-6 right">
-            <form class="input-box"  action="{{route('crearUsuario')}}" method="POST">
+          <div class="modal-body">
+            <form class="input-box"  action="{{route('registrarUsuario')}}" method="POST">
               @csrf
-              <h4>Bienvenido a Warmi'A</h4>
-              <p class="">Por favor ingrese sus datos para Iniciar Sesion</p>
+              <div class="row g-3">
               <div class="form-floating mb-3">
                 <input
                   type="text" 
@@ -73,6 +63,16 @@ Inicio de Sesion
                   Please provide a valid state.
                 </div>
               </div>
+              <div class="mb-3">
+                <label for="especialidad" class="form-label">Especialidad</label>
+                  <select class="form-select" id="especialidad" name="especialidad" style="display: none;">
+                    <option value="">Seleccione una especialidad</option>
+                    @foreach ($especialidades as $especialidad)
+                        <option value="{{ $especialidad->id }}">{{ $especialidad->nombre }}</option>
+                    @endforeach
+                  </select>
+              </div>
+              
               <div class="form-floating mb-3">
                 <input type="password" class="form-control @error('password')  border border-danger @enderror" name="password" id="password" placeholder="Password">
                 <label class=" @error('password') text-danger @enderror" for="password">Password *</label>
@@ -87,12 +87,28 @@ Inicio de Sesion
               </div>
               <div class="d-grid">
                 <button class="btn btn-lg btn-primary btn-login mb-2" type="submit">Registrar usuario</button>
-              <div class="home">
-                <span>Volver al Inicio? <a href="/">Registrar Usuario</a> </span>
-              </div>
+             
             </form>
           </div>
-        </div>
       </div>
-    </div>
-@endsection
+  </div>
+</div>
+<script>
+  $(document).ready(function() {
+      // Escucha los cambios en el campo de cargo
+      $('#cargo').change(function() {
+          // Obtén el valor seleccionado
+          var selectedCargo = $(this).val();
+
+          // Si el cargo seleccionado es 'Medico', muestra el campo de especialidad
+          if (selectedCargo === 'Medico') {
+              $('#especialidad').show();
+          } else {
+              // Si no es 'Medico', oculta el campo de especialidad
+              $('#especialidad').hide();
+          }
+      });
+  });
+</script>
+
+
