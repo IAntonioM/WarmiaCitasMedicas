@@ -31,6 +31,9 @@
 @endsection
 
 @section('script')  
+<script>
+    let appURL = "{{ $appURL }}";
+</script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             let idUser = document.querySelector("#IdUsuario").value;
@@ -44,7 +47,7 @@
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,listWeek'
                 },
-                events: "http://localhost:8000/cita/medico-calendario/"+idUser,
+                events: appURL+"cita/medico-calendario/"+idUser,
                 dateClick: function (info) {
                     formulario.reset();
                     formulario.start.value=info.dateStr;

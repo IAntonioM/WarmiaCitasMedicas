@@ -14,7 +14,8 @@ class CalendarioController extends Controller
         return view("cita.calendarioCitas");
     }
     public function indexmedico(){
-        return view("cita.calendarioMedico");
+        $appURL = config('app.url');
+        return view("cita.calendarioMedico",compact('appURL'));
     }
     public function store(Request $request){
         

@@ -107,7 +107,7 @@ class CitaController extends Controller
         public function medicoCalendario($id){
             $events = array();
             $medico = Medico::where('user_id', $id)->first();
-        
+            
             if ($medico) {
                 $citas = Cita::where('medico_id', $medico->id)->get();
         
