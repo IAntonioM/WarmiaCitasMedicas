@@ -16,14 +16,15 @@ class PacienteController extends Controller
     }
 
     public function index(Request $request){  
-        $busqueda=$request->busqueda;  
+        $busqueda=$request->busqueda;
+        $appURL = config('app.url');  
         $pacientes = Paciente::where('id', 'LIKE', '%' . $busqueda . '%')
                             ->orWhere('nombres', 'LIKE', '%' . $busqueda . '%')
                             ->orWhere('apellidos', 'LIKE', '%' . $busqueda . '%')
                             ->orWhere('dni', 'LIKE', '%' . $busqueda . '%')
                             ->paginate(6);
                     
-        return view("paciente.gestionPacientes", compact('pacientes','busqueda'));
+        return view("paciente.gestionPacientes", compact('pacientes','busqueda','appURL'));
     }
 
     public function store(Request $request){

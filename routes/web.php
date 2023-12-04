@@ -12,7 +12,8 @@ use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 
-URL::forceScheme('https');
+
+
 //<----pagina inicial---->
 Route::get('',[AuthController::class,'login'])->name('login');
 
@@ -51,7 +52,7 @@ Route::get('/calendario/mostrar',[CalendarioController::class,'show'])->name('ob
 Route::get('/cita/cita-calendario/{estado}/{idMedico}/', [CalendarioController::class, 'citasCalendario']);
 Route::get('/cita/medico-calendario/', [CalendarioController::class, 'medicoCalendario']);
 Route::get('/calendario/cita/{id}', [CalendarioController::class, 'obtenerDetallesCita']);
-URL::forceScheme('http');
+
 
 
 
