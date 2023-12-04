@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
 
 class HistoriaClinica extends Model
 {
@@ -18,6 +20,10 @@ class HistoriaClinica extends Model
         'archivo_adjunto_path',
         'tipo',
     ];
+    public static function eliminarHistoriaClinica($id)
+        {
+            DB::delete('DELETE FROM historias_clinicas WHERE id = ?', [$id]);
+        }
     public function paciente()
     {
         return $this->belongsTo(Paciente::class, 'paciente_id');

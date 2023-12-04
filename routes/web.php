@@ -65,7 +65,7 @@ Route::get('/historias-clinicas/crear/{idPaciente}/{idCita}',[HistoriasClinicasC
 Route::post('/historia-clinica/crear',[HistoriasClinicasController::class,'store'])->name('registrarHistoriaClinica');
 Route::get('/historia-clinica/editar/{id}',[HistoriasClinicasController::class,'editarHC'])->name('editarHistoriaClinica');
 Route::put('/historia-clinica/editar',[HistoriasClinicasController::class,'update'])->name('editarHistoriaClinica');
-Route::delete('/historias-clinicas/eliminar',[HistoriasClinicasController::class,'delete'])->name('deleteHistoriaClinica');
+Route::delete('/historias-clinicas/eliminar',[HistoriasClinicasController::class,'destroy'])->name('eliminarHistoriaClinica');
 
 
 // <----Documentos---->

@@ -1,6 +1,6 @@
 @extends('layouts.sessionApp')
 @section('titulo')
-    Gestión de Citas 
+    Gestión de Citas Médicas
 @endsection
 @section('contenido')
     <hr>

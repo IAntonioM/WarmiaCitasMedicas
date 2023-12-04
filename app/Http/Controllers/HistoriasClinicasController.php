@@ -18,13 +18,24 @@ class HistoriasClinicasController extends Controller
     $this->middleware("auth");
 }
 public function index(Request $request) {
-    // Obtener historias clínicas paginadas
+    $busqueda = $request->busqueda;  
+
     $historiasClinicas = HistoriaClinica::with(['cita.medico', 'paciente'])
+        ->where(function ($query) use ($busqueda) {
+            $query->orWhere('historias_clinicas.id', 'LIKE', '%' . $busqueda . '%')
+                ->orWhere('historias_clinicas.titulo', 'LIKE', '%' . $busqueda . '%')
+                ->orWhereHas('paciente', function ($subquery) use ($busqueda) {
+                    $subquery->where('dni', 'LIKE', '%' . $busqueda . '%')
+                             ->orWhere('nombres', 'LIKE', '%' . $busqueda . '%')
+                             ->orWhere('apellidos', 'LIKE', '%' . $busqueda . '%');
+                });
+        })
         ->orderBy('created_at', 'desc')
         ->paginate(7);
 
     return view("historialClinico.Historiasclinicas", ['historiasClinicas' => $historiasClinicas]);
 }
+
     public function salaDeEspera(Request $request){
         $busqueda = $request->busqueda;
         $user = auth()->user();
@@ -52,7 +63,6 @@ public function index(Request $request) {
         $validator = Validator::make($request->all(), [
             'archivo_respaldo' => 'required|file|mimes:pdf|max:2048',
             'paciente_id' => 'required|exists:pacientes,id',
-            'cita_id' => 'required|exists:citas,id',
             'titulo' => 'required|string|max:255',
             'diagnostico' => 'required|string',
             'tipo' => ['required', Rule::in(['Inicial', 'Control'])],
@@ -79,7 +89,7 @@ public function index(Request $request) {
         $historiaClinica->save();
         Cita::where('id', $request->cita_id)->update(['estado' => 'Atendida']);
 
-        return redirect()->route('historialClinico');
+        return redirect()->route('historialClinico')->with('message', 'Historia clinica guardada correctamente')->with('type', 'success');
     }
     public function editarHC(Request $request,$idhc){
         $historiasClinicas = HistoriaClinica::where('id', $idhc)
@@ -100,7 +110,6 @@ public function index(Request $request) {
         $validator = Validator::make($request->all(), [
             'archivo_respaldo' => 'nullable|file|mimes:pdf|max:2048',
             'paciente_id' => 'required|exists:pacientes,id',
-            'cita_id' => 'required|exists:citas,id',
             'titulo' => 'required|string|max:255',
             'diagnostico' => 'required|string',
             'tipo' => ['required', Rule::in(['Inicial', 'Control'])],
@@ -117,15 +126,11 @@ public function index(Request $request) {
         }
 
         $historiaClinica = HistoriaClinica::findOrFail($idhc);
-
-        // Procesa la actualización del archivo adjunto solo si se proporciona uno nuevo
         if ($request->hasFile('archivo_respaldo')) {
             $archivoRespaldo = $request->file('archivo_respaldo');
             $uuid = Str::uuid();
             $nombreArchivo = "{$uuid}_";
             $rutaArchivo = $archivoRespaldo->storeAs('hc_pacientes', $nombreArchivo . '.pdf', 'public');
-
-            // Elimina el archivo antiguo antes de guardar el nuevo
             Storage::disk('public')->delete('hc_pacientes/' . $historiaClinica->archivo_adjunto_path);
 
             $historiaClinica->archivo_adjunto_path = basename($rutaArchivo);
@@ -140,9 +145,11 @@ public function index(Request $request) {
         $historiaClinica->save();
 
 
-        return redirect()->route('historialClinico')->with('success', 'Historia Clínica actualizada exitosamente');
+        return redirect()->route('historialClinico')->with('message', 'Historia Clínica actualizada exitosamente')->with('type', 'info');
     }
-    public function delete(Request $request){
-        return view("historialClinico.gestionHistoriaclinica");
+    public function destroy(Request $request){
+        $id = $request->input('id');
+        HistoriaClinica::eliminarHistoriaClinica($id);
+        return redirect()->route('historialClinico')->with('message', 'Historia clinica eliminada correctamente')->with('type', 'info');
     }
 }

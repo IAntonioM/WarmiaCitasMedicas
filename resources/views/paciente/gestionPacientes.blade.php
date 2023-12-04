@@ -38,8 +38,10 @@
                         <td>{{ $paciente->direccion }}</td>
                         <td>{{ $paciente->telefono }}</td>
                         <td class="">
-                            <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#edit{{$paciente->id}}">Editar <i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#delete{{$paciente->id}}">Eliminar <i class="fa-solid fa-circle-xmark"></i></button>
+                            @role('Medico')
+                            <a class="btn btn-success" href="/historias-clinicas/crear/{{$paciente->id}}/0"> Crear Historia <i class="fa-solid fa-circle-up fa-rotate-90"></i></a>
+                            @endrole<button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#edit{{$paciente->id}}"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#delete{{$paciente->id}}"><i class="fa-solid fa-circle-xmark"></i></button>
                         </td>
                     </tr>
                     @include('paciente.editarPaciente')

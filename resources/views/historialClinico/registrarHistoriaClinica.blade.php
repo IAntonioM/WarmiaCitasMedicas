@@ -28,13 +28,15 @@
 
         <div class="col-md-12 mt-4">
             <h2 class="text-center">Información de la Cita</h2>
-            @foreach ($cita as $cita)
+            @forelse ($cita as $cita)
             <ul class="list-group">
                 <li class="list-group-item"><strong>Fecha y Hora:</strong> {{ \Carbon\Carbon::parse($cita->fecha_hora)->locale('es_ES')->isoFormat('LL') }}, {{ \Carbon\Carbon::parse($cita->fecha_hora)->format('h:i a') }}</li>
                 <li class="list-group-item"><strong>Estado:</strong> {{ $cita->estado }}</li>
                 <li class="list-group-item"><strong>Motivo de Consulta:</strong> {{ $cita->motivo_consulta }} </li>
+            @empty
+                <li class="list-group-item">No hay contenido disponible.</li>
+            @endforelse
             </ul>
-            @endforeach
         </div>
         <div class="col-md-12 mt-4">
             <h2 class="text-center">Historias Clínicas Anteriores</h2>
@@ -59,8 +61,11 @@
                 @csrf
                 
                 <input type="hidden" class="form-control" id="paciente_id" name="paciente_id" value="{{ $paciente->id }}" >
-                
-                <input type="hidden" class="form-control" id="cita_id" name="cita_id" value="{{ $cita->id }}" required>
+                @if(isset($cita->id))
+                    <input type="hidden" class="form-control" id="cita_id" name="cita_id" value="{{ $cita->id }}" required>
+                @else
+                    <p>No existe una cita asociada*</p>
+                @endif
                 <div class="row g-3">
                     <div class="col-md-7">
                         <label for="titulo" class="form-label">Título:</label>

@@ -52,7 +52,7 @@
                 </li>
                 @endrole
                 
-                @role('Recepcionista')
+                @role('Recepcionista|Medico')
                 <li class="mt-3">
                     <hr class="h-color mx-2">
                     <p class="px-3 d-block">Control</p>
@@ -66,32 +66,14 @@
                             <i class="fa-solid fa-calendar-check"></i> Gestion de Citas
                         </a>
                     </li>
-                </li>
                 @endrole
-
-                @role('Medico')
-                <li class="mt-3">
-                    <hr class="h-color mx-2">
-                    <p class="px-3 d-block">Control</p>
-                    <li class="{{ request()->is('paciente') ? 'active' : '' }}">
-                        <a href="{{ route('gestionPacientes') }}" class="text-decoration-none px-3 py-2 d-block">
-                            <i class="fa-solid fa-hospital-user"></i> Gestion de Pacientes
-                        </a>
-                    </li>
-                    <li class="{{ request()->is('cita','cita/*') ? 'active' : '' }}">
-                        <a href="{{ route('gestionCitas') }}" class="text-decoration-none px-3 py-2 d-block">
-                            <i class="fa-solid fa-calendar-check"></i> Gestion de Citas
-                        </a>
-                    </li>
+                    @role('Medico')
                     <li class="{{ request()->is('sala-espera','sala-espera/*') ? 'active' : '' }}">
                         <a href="{{ route('salaDeEspera') }}" class="text-decoration-none px-3 py-2 d-block">
                             <i class="fa-solid fa-hourglass-start"></i> Sala de Espera
                         </a>
                     </li>
                 </li>
-                @endrole
-                
-                @role('Medico')
                 <li class="mt-3">
                     <hr class="h-color mx-2">
                     <p class="px-3 d-block">Documentos</p>
@@ -103,27 +85,15 @@
                     </li>
                 </li>
                 @endrole
-                
-                @role('Recepcionista|Administrador')
+
+                @role('Recepcionista|Administrador|Medico')
                 <li class="mt-3">
                     <hr class="h-color mx-2">
                     <p class="px-3 d-block">Otros</p>
                     
-                    <li class="{{ request()->is('calendario') ? 'active' : '' }}">
+                    <li class="{{ request()->is('calendario-citas') ? 'active' : '' }}">
                         <a href="{{ route('calendarioCitas') }}" class="text-decoration-none px-3 py-2 d-block">
                             <i class="fa fa-calendar"></i> Calendario de Citas
-                        </a>
-                    </li>
-                </li>
-                @endrole
-                @role('Medico')
-                <li class="mt-3">
-                    <hr class="h-color mx-2">
-                    <p class="px-3 d-block">Otros</p>
-                    
-                    <li class="{{ request()->is('calendario-medico') ? 'active' : '' }}">
-                        <a href="{{ route('calendarioCitas') }}" class="text-decoration-none px-3 py-2 d-block">
-                            <i class="fa fa-calendar"></i> Calendario Medico
                         </a>
                     </li>
                 </li>
@@ -149,10 +119,11 @@
                     <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent" style="height: 100px">
                         <ul class="navbar-nav mb-2 mb-lg-0">
                             <li class="nav-item">
-                                <p class="nav-link active" aria-current="page">Nombres: {{auth()->user()->nombres}} {{ auth()->user()->apellidos }}</p>
+                                <p class="nav-link active" aria-current="page"><strong>{{ auth()->user()->cargo }} </strong>
+                                <br>
+                                {{ auth()->user()->nombres }} {{ auth()->user()->apellidos }} | <a href="{{route('cerrarSesion')}}">Cerrar Sesión</a>
                             </li>
                             <li class="nav-item">
-                                <p class="nav-link active" aria-current="page" >Cargo: {{auth()->user()->cargo}} </p>
                             </li>
                         </ul>
 
