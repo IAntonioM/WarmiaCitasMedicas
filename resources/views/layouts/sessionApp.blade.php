@@ -145,20 +145,29 @@
     <script src="{{ asset('js/dashboard.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     @if (Session::has('message') && Session::has('type'))
-        <script>
-            @php
-                $type = Session::get('type');
-                $message = Session::get('message');
-            @endphp
-            @if($type == 'success')
-                toastr.success("{{ $message }}");
-            @elseif($type == 'info')
-                toastr.info("{{ $message }}");
-            @elseif($type == 'error')
-                toastr.error("{{ $message }}");
-            @endif
-        </script>
-    @endif
+    <script>
+        @php
+            $type = Session::get('type');
+            $message = Session::get('message');
+        @endphp
+        @if($type == 'success')
+            toastr.success("{{ $message }}", null, {
+                positionClass: 'toast-bottom-left',
+                progressBar: true
+            }); 
+        @elseif($type == 'info')
+            toastr.info("{{ $message }}", null, {
+                positionClass: 'toast-bottom-left',  
+                progressBar: true
+            });
+        @elseif($type == 'error')
+            toastr.error("{{ $message }}", null, {
+                positionClass: 'toast-bottom-left',
+                progressBar: true
+            });
+        @endif
+    </script>
+@endif
     <script>
         @if (session('open_modal'))
             $(document).ready(function() {
