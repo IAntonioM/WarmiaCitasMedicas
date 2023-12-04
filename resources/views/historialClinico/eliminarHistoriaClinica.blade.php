@@ -6,9 +6,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{route('eliminarHistoriaClinica')}}"">
+                <form method="POST" action="{{$appURL}}historias-clinicas-eliminar">
                     @csrf
-                    @method('DELETE')
+                    @method('POST')
                     <input type="hidden" name="id" value="{{$historiaClinica->id}}">
                     <p>Desea eliminar la historia clínica?</p>
                     <p>Titulo : {{$historiaClinica->titulo}}</p>

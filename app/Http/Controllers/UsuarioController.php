@@ -23,7 +23,9 @@ class UsuarioController extends Controller
             return $next($request);
         });
     }
-    public function index(Request $request) {  
+    public function index(Request $request) {
+        
+        $appURL = config('app.url'); 
         $busqueda = $request->busqueda;
         $especialidades = Especialidad::all();
         $usuarios = User::where('id', 'LIKE', '%' . $busqueda . '%')
@@ -35,7 +37,7 @@ class UsuarioController extends Controller
         
                         
 
-        return view("user.gestionUsuarios", compact('usuarios', 'busqueda','especialidades'));
+        return view("user.gestionUsuarios", compact('usuarios', 'busqueda','especialidades','appURL'));
     }
 
     public function store(Request $request){

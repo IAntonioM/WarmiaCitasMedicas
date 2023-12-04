@@ -19,6 +19,7 @@ class HistoriasClinicasController extends Controller
 }
 public function index(Request $request) {
     $busqueda = $request->busqueda;  
+    $appURL = config('app.url');
 
     $historiasClinicas = HistoriaClinica::with(['cita.medico', 'paciente'])
         ->where(function ($query) use ($busqueda) {
@@ -33,7 +34,7 @@ public function index(Request $request) {
         ->orderBy('created_at', 'desc')
         ->paginate(7);
 
-    return view("historialClinico.Historiasclinicas", ['historiasClinicas' => $historiasClinicas]);
+    return view("historialClinico.Historiasclinicas", ['historiasClinicas' => $historiasClinicas,'appURL'=>$appURL]);
 }
 
     public function salaDeEspera(Request $request){
@@ -48,12 +49,13 @@ public function index(Request $request) {
         return view("historialClinico.salaDeEspera", ['citas' => $citas,'medicos' => $medicos,'busqueda'=>$busqueda]);
     }
     public function indexRegistrar($idPaciente, $idCita){
+        $appURL = config('app.url');
         $historiasClinicas = HistoriaClinica::where('paciente_id', $idPaciente)
             ->orderBy('created_at', 'desc')
             ->get();
         $paciente=Paciente::buscarPacientePorDni($idPaciente);
         $cita = Cita::obtenerCitasPorId($idCita);
-        return view("historialClinico.registrarHistoriaClinica", ['paciente' => $paciente,'cita' => $cita,'historiasClinicas'=>$historiasClinicas]);
+        return view("historialClinico.registrarHistoriaClinica", ['paciente' => $paciente,'cita' => $cita,'historiasClinicas'=>$historiasClinicas,'appURL'=>$appURL]);
     }
 
     public function store(Request $request){
@@ -92,13 +94,14 @@ public function index(Request $request) {
         return redirect()->route('historialClinico')->with('message', 'Historia clinica guardada correctamente')->with('type', 'success');
     }
     public function editarHC(Request $request,$idhc){
+        $appURL = config('app.url');
         $historiasClinicas = HistoriaClinica::where('id', $idhc)
             ->orderBy('created_at', 'desc')
             ->get();
         $hc = HistoriaClinica::find($idhc);
         $paciente=Paciente::buscarPacientePorDni($hc->paciente_id);
         $cita = Cita::obtenerCitasPorId($hc->cita_id);
-        return view("historialClinico.editarHistoriaClinica", ['paciente' => $paciente,'cita' => $cita,'hc' => $hc,'historiasClinicas'=>$historiasClinicas]);
+        return view("historialClinico.editarHistoriaClinica", ['paciente' => $paciente,'cita' => $cita,'hc' => $hc,'historiasClinicas'=>$historiasClinicas,'appURL'=>$appURL]);
     }
     public function update(Request $request)
     {

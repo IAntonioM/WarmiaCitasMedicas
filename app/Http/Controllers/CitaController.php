@@ -23,7 +23,8 @@ class CitaController extends Controller
         return view("cita.gestionCitas", ['citas' => $citas,'medicos' => $medicos,'busqueda'=>$busqueda]);
     }
     public function indexRegistrar()
-    {
+    {   
+        
         $medicos = Medico::obtenerMedicos();
         $appURL = config('app.url');
         return view("cita.registrarCita", compact('medicos', 'appURL'));

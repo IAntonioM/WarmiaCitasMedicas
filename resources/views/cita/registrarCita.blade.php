@@ -30,7 +30,7 @@
                 
                 </div>
             </div>
-            <form action="{{ route('registrarCita') }}" method="POST" class="form">
+            <form action="{{$appURL}}cita" method="POST" class="form">
                 @csrf
                 <input type="hidden" name="idPaciente" id="idPaciente">
                 <div class="row">

@@ -43,7 +43,7 @@ Route::get('/cita',[CitaController::class,'index'])->name('gestionCitas');
 Route::get('/cita/crear',[CitaController::class,'indexRegistrar'])->name('nuevaCita');
 Route::post('/cita',[CitaController::class,'store'])->name('registrarCita');
 Route::get('/cita/editar/{id}',[CitaController::class,'editarCita'])->name('editarCita');
-Route::put('/cita/editar', [CitaController::class, 'update'])->name('editarCita');
+Route::put('/cita', [CitaController::class, 'update'])->name('editarCita');
 
 // <----CalendarioCitas---->
 Route::get('/calendario-citas',[CalendarioController::class,'index'])->name('calendarioCitas');
@@ -56,17 +56,14 @@ Route::get('/calendario/cita/{id}', [CalendarioController::class, 'obtenerDetall
 
 
 
-
-
-
 // <----Historias Clinicas---->
 Route::get('/sala-espera',[HistoriasClinicasController::class,'salaDeEspera'])->name('salaDeEspera');
 Route::get('/historias-clinicas',[HistoriasClinicasController::class,'index'])->name('historialClinico');
 Route::get('/historias-clinicas/crear/{idPaciente}/{idCita}',[HistoriasClinicasController::class,'indexRegistrar'])->name('registrarHistoriaClinica');
-Route::post('/historia-clinica/crear',[HistoriasClinicasController::class,'store'])->name('registrarHistoriaClinica');
+Route::post('/historia-clinica',[HistoriasClinicasController::class,'store'])->name('registrarHistoriaClinica');
 Route::get('/historia-clinica/editar/{id}',[HistoriasClinicasController::class,'editarHC'])->name('editarHistoriaClinica');
-Route::put('/historia-clinica/editar',[HistoriasClinicasController::class,'update'])->name('editarHistoriaClinica');
-Route::delete('/historias-clinicas/eliminar',[HistoriasClinicasController::class,'destroy'])->name('eliminarHistoriaClinica');
+Route::put('/historia-clinica',[HistoriasClinicasController::class,'update'])->name('editarHistoriaClinica');
+Route::post('/historias-clinicas-eliminar',[HistoriasClinicasController::class,'destroy'])->name('eliminarHistoriaClinica');
 
 
 // <----Documentos---->

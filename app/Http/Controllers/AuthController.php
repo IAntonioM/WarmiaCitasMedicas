@@ -7,10 +7,12 @@ use Illuminate\Http\Request;
 class AuthController extends Controller
 {
     public function login(){
+        
+        $appURL = config('app.url');
         if (auth()->check()) {
             return redirect('/inicio'); 
         }
-        return view("user.login");
+        return view("user.login",compact('appURL'));
     }
 
     public function loginStore(Request $request){

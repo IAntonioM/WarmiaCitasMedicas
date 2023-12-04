@@ -6,8 +6,7 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form class="input-box"  action="" method="POST">
-              <form class="input-box"  action="{{route('editarUsuario')}}" method="POST">
+              <form class="input-box"  action="{{appURL}}usuario" method="POST">
                   @csrf
                   @method('PUT')
                   <input type="hidden" name="userId" value="{{$usuario->id}}">
@@ -70,7 +69,6 @@
                 </div>
                     <button class="btn btn-lg btn-primary btn-login mb-2" type="submit">Registrar usuario</button>
                 </form>
-            </form>
           </div>
       </div>
   </div>

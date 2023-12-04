@@ -16,7 +16,7 @@ Inicio de Sesion
             <img src="{{asset('img/logo.jfif')}}" alt="">
           </div>
           <div class="col-md-6 right">
-            <form class="input-box"  action="{{route('login')}}" method="POST">
+            <form class="input-box"  action="{{$appURL}}login" method="POST">
               @csrf
               <h4>Bienvenido a Warmi'A</h4>
               <p class="">Por favor ingrese sus datos para Iniciar Sesion</p>

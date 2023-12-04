@@ -57,7 +57,7 @@
     <div class="col-md-7">
         <div class="col-md-12">
             <h2 class="text-center">Consulta Actual</h2>
-            <form action="{{route('registrarHistoriaClinica')}}" method="POST" enctype="multipart/form-data">
+            <form action="{{$appURL}}historia-clinica" method="POST" enctype="multipart/form-data">
                 @csrf
                 
                 <input type="hidden" class="form-control" id="paciente_id" name="paciente_id" value="{{ $paciente->id }}" >

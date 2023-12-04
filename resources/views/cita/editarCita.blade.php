@@ -17,7 +17,7 @@
 <div class="container mt-4">
     <div class="row">
         <div class="col-md-3">
-            <form action="{{ route('editarCita') }}" method="POST" class="form">
+            <form action="{{$appURL}}cita" method="POST" class="form">
                 @csrf
                 @method('PUT')
             
