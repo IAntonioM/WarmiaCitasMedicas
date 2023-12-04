@@ -22,7 +22,7 @@ class AuthController extends Controller
             return back()->with('mensaje','Dni o contraseña incorrectos');
         }
 
-        return redirect()->route('inicio');
+        return redirect()->secure(route('inicio'));
     }
 
     public function logoutStore(Request $request){
