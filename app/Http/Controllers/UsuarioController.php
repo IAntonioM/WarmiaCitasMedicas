@@ -33,9 +33,6 @@ class UsuarioController extends Controller
                         ->orWhere('apellidos', 'LIKE', '%' . $busqueda . '%')
                         ->orWhere('dni', 'LIKE', '%' . $busqueda . '%')
                         ->paginate(7);
-        
-        
-                        
 
         return view("user.gestionUsuarios", compact('usuarios', 'busqueda','especialidades','appURL'));
     }

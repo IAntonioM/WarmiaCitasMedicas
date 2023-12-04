@@ -19,7 +19,8 @@
     <div class="col-7">
         @include('calendario.calendario')
     </div>
-    <div class="col"></div>
+    <div class="col">
+    </div>
 </div>
 <style>
     .modal-dialog {

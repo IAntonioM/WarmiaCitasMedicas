@@ -6,7 +6,7 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-              <form class="input-box"  action="{{appURL}}usuario" method="POST">
+              <form class="input-box"  action="{{$appURL}}usuario" method="POST">
                   @csrf
                   @method('PUT')
                   <input type="hidden" name="userId" value="{{$usuario->id}}">
