@@ -44,19 +44,17 @@ Route::post('/cita',[CitaController::class,'store'])->name('registrarCita');
 Route::get('/cita/editar/{id}',[CitaController::class,'editarCita'])->name('editarCita');
 Route::put('/cita/editar', [CitaController::class, 'update'])->name('editarCita');
 
-
-
 // <----CalendarioCitas---->
-Route::get('/calendario',[CalendarioController::class,'index'])->name('calendarioCitas');
-Route::get('/calendario-medico',[CalendarioController::class,'indexmedico'])->name('medicoCalendario');
-
-
+Route::get('/calendario-citas',[CalendarioController::class,'index'])->name('calendarioCitas');
 Route::get('/calendario/mostrar',[CalendarioController::class,'show'])->name('obetnerEventos');
-Route::post('/calendario',[CalendarioController::class,'store'])->name('guardarEvento');
+// Route::post('/calendario',[CalendarioController::class,'store'])->name('guardarEvento');
+Route::get('/cita/cita-calendario/{estado}/{idMedico}/', [CalendarioController::class, 'citasCalendario']);
+Route::get('/cita/medico-calendario/', [CalendarioController::class, 'medicoCalendario']);
+Route::get('/calendario/cita/{id}', [CalendarioController::class, 'obtenerDetallesCita']);
 
 
-Route::get('/cita/cita-calendario/{estado}/{idMedico}/', [CitaController::class, 'citasCalendario'])->name('calendarioCita');
-Route::get('/cita/medico-calendario/{id}/', [CitaController::class, 'medicoCalendario'])->name('calendariomedico');
+
+
 
 
 
@@ -64,12 +62,18 @@ Route::get('/cita/medico-calendario/{id}/', [CitaController::class, 'medicoCalen
 Route::get('/sala-espera',[HistoriasClinicasController::class,'salaDeEspera'])->name('salaDeEspera');
 Route::get('/historias-clinicas',[HistoriasClinicasController::class,'index'])->name('historialClinico');
 Route::get('/historias-clinicas/crear/{idPaciente}/{idCita}',[HistoriasClinicasController::class,'indexRegistrar'])->name('registrarHistoriaClinica');
-Route::post('/historias-clinicas/crear',[HistoriasClinicasController::class,'store'])->name('registrarHistoriaClinica');
-Route::put('/historias-clinicas/editar',[HistoriasClinicasController::class,'update'])->name('editarHistoriaClinica');
+Route::post('/historia-clinica/crear',[HistoriasClinicasController::class,'store'])->name('registrarHistoriaClinica');
+Route::get('/historia-clinica/editar/{id}',[HistoriasClinicasController::class,'editarHC'])->name('editarHistoriaClinica');
+Route::put('/historia-clinica/editar',[HistoriasClinicasController::class,'update'])->name('editarHistoriaClinica');
 Route::delete('/historias-clinicas/eliminar',[HistoriasClinicasController::class,'delete'])->name('deleteHistoriaClinica');
 
 
 // <----Documentos---->
 Route::get('/descargar-documento-inicial/{dni}',[DocumentController::class,'descargarDocumentoMedicoInicial'])->name('descargarDocumentoInicial');
 Route::get('/descargar-documento-control/{dni}',[DocumentController::class,'descargarDocumentoMedicoControl'])->name('descargarDocumentoControl');
+Route::get('/descargar-documento-paciente/{nombreArchivo}', [DocumentController::class, 'descargarHCPaciente'])
+    ->name('descargarDocumentoPaciente');
+// Route::get('/ver-historia/{id}', [DocumentController::class, 'verHistoriaClinica'])->name('verHistoriaClinica');
 
+
+Route::get('/ver-documento-paciente/{nombreArchivo}', [DocumentController::class, 'verDocumentoPaciente'])->name('verDocumentoPaciente');

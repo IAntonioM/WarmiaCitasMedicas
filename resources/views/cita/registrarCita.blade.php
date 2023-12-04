@@ -101,142 +101,20 @@
                     </div>
                 </div>
             </form>
-            <a href="">{{ config('app.APP_NAME') }}</a>
+            
         </div>
         <div class="col-md-1">
         </div>
 
         <div class="col-md-8">
-            <div id="calendar"></div>
+            @include('calendario.calendario')
         </div>
 
     </div>
 </div>
-
-<!-- Modal trigger button -->
-<button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#modalId">
-  Launch
-</button>
-
-<!-- Modal Body -->
-<!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
-<div class="modal fade" id="modalId" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalTitleId">Modal title</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Body
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Optional: Place to the bottom of scripts -->
-<script>
-    const myModal = new bootstrap.Modal(document.getElementById('modalId'), options)
-
-</script>
 
 @include('paciente.registrarPaciente')
 @endsection
 @section('script') 
-<script>
-    let appURL = "{{ $appURL }}";
-</script>
-<script>
-    function buscarCliente() {
-        var dni = document.getElementById('dni').value;
-        axios.get(appURL+'paciente/buscar/' + dni)
-            .then(function (response) {
-                paciente = response.data;
-                if (typeof paciente.nombres !== 'undefined' && paciente.nombres !== null) {
-                    console.log(paciente.nombres);
-                    document.getElementById('paciente').value = paciente.nombres + " " + paciente.apellidos;
-                    document.getElementById('idPaciente').value = paciente.id;
-                    document.getElementById('mensaje-error').innerHTML = '';
-                } else {
-                    document.getElementById('mensaje-error').innerHTML = '<p class="text-danger">No se encontró paciente con ese DNI <a class="" data-bs-toggle="modal" data-bs-target="#create">registrar Paciente?</a></p>';
-                }
-            })
-            .catch(function (error) {
-                console.error('Error al buscar cliente:', error);
-            });
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        let formulario = document.querySelector("form");
-        const calendarEl = document.getElementById('calendar');
-        let idMedico = formulario.querySelector('#medico').value;
-        let calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            locale: "es",
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,listWeek'
-            },
-            events: appURL+"cita/cita-calendario/Pendiente/" + idMedico,
-            dateClick: function (info) {
-                formulario.fecha.value = info.dateStr;
-            },
-            validRange: {
-                start: new Date().toISOString().split("T")[0],
-            },
-            eventContent: function (arg) {
-                return {
-                    html: `
-                        <div style="background-color: ${arg.event.backgroundColor}; color: ${arg.event.textColor}; padding: 5px;">
-                            <div>${formatHour(arg.event.start)} ${arg.event.title}</div>
-                        </div>`,
-                };
-            },
-        });
-        calendar.render();
-
-        document.getElementById("medico").addEventListener("change", function () {
-            idMedico = this.value;
-            calendar.destroy();
-            calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: "es",
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,listWeek'
-                },
-                events: appURL+"cita/cita-calendario/Pendiente/" + idMedico,
-                dateClick: function (info) {
-                    formulario.fecha.value = info.dateStr;
-                },
-                validRange: {
-                    start: new Date().toISOString().split("T")[0], 
-                },
-                eventContent: function (arg) {
-                    return {
-                        html: `
-                            <div style="background-color: ${arg.event.backgroundColor}; color: ${arg.event.textColor}; padding: 5px;">
-                                <div>${formatHour(arg.event.start)} ${arg.event.title}</div>
-                            </div>`,
-                    };
-                },
-            });
-            calendar.render();
-            console.log('idMedico seleccionado:', idMedico);
-        });
-
-       
-        function formatHour(date) {
-            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        }
-    });
-</script>
-
+    @include('calendario.calendariojs')
 @endsection

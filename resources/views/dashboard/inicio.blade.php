@@ -93,7 +93,7 @@
             <div class="col p-4 d-flex flex-column position-static">
                 <h3 class="mb-0">Calendario Medico</h3>
                 <br>
-                <a href="{{ route('medicoCalendario') }}" class="stretched-link">Ir a Calendario</a>
+                <a href="{{ route('calendarioCitas') }}" class="stretched-link">Ir a Calendario</a>
             </div>
             <div class="col-auto d-none d-lg-block">
                 <!-- Reemplazar 'ruta_de_la_imagen' con la ruta de tu imagen -->

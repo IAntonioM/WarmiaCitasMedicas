@@ -5,11 +5,9 @@
 
 @section('contenido')
 <div class="container mt-5">
-    <hr>
-    <h2 class="text-center">Documentos Médico</h2>
     @foreach ($paciente as $paciente)
-    <a href="/descargar-documento-inicial/{{$paciente->dni}}" class="btn btn-success" download><i class="fa-solid fa-download"></i> HC Inicial</a>
-    <a href="/descargar-documento-control/{{$paciente->dni}}" class="btn btn-info" download><i class="fa-solid fa-download"></i> HC Control</a>
+    <a href="/descargar-documento-inicial/{{$paciente->nombres}} {{ $paciente->apellidos }}" class="btn btn-success" download><i class="fa-solid fa-download"></i> HC Inicial</a>
+    <a href="/descargar-documento-control/{{$paciente->nombres}} {{ $paciente->apellidos }}" class="btn btn-info" download><i class="fa-solid fa-download"></i> HC Control</a>
     @endforeach
     <hr>
 
@@ -41,16 +39,17 @@
         <div class="col-md-12 mt-4">
             <h2 class="text-center">Historias Clínicas Anteriores</h2>
             <ul class="list-group" style="overflow-y: auto; max-height: 200px">
-                <li class="list-group-item"><strong>Consulta Anterior:</strong> 25 de noviembre de 2023 - Prescripción de medicamento para la gripe.</li>
-                <li class="list-group-item"><strong>Consulta Anterior:</strong> 25 de noviembre de 2023 - Prescripción de medicamento para la gripe.</li>
-                <li class="list-group-item"><strong>Consulta Anterior:</strong> 25 de noviembre de 2023 - Prescripción de medicamento para la gripe.</li>
-                <li class="list-group-item"><strong>Consulta Anterior:</strong> 25 de noviembre de 2023 - Prescripción de medicamento para la gripe.</li>
-                <li class="list-group-item"><strong>Consulta Anterior:</strong> 25 de noviembre de 2023 - Prescripción de medicamento para la gripe.</li>
-                <li class="list-group-item"><strong>Consulta Anterior:</strong> 25 de noviembre de 2023 - Prescripción de medicamento para la gripe.</li>
-                <li class="list-group-item"><strong>Consulta Anterior:</strong> 25 de noviembre de 2023 - Prescripción de medicamento para la gripe.</li>
-                <li class="list-group-item"><strong>Consulta Anterior:</strong> 25 de noviembre de 2023 - Prescripción de medicamento para la gripe.</li>
-                <li class="list-group-item"><strong>Consulta Anterior:</strong> 25 de noviembre de 2023 - Prescripción de medicamento para la gripe.</li>
-        </ul>
+                @forelse ($historiasClinicas as $historiaClinica)
+                    <li class="list-group-item">
+                        <strong>{{ $historiaClinica->titulo }} : </strong>{{ \Illuminate\Support\Str::limit($historiaClinica->diagnostico, 50, '...') }},
+                        {{ \Carbon\Carbon::parse($historiaClinica->created_at)->locale('es_ES')->isoFormat('LL') }}
+                        <a href="/descargar-documento-paciente/{{$historiaClinica->archivo_adjunto_path}}" class="btn" download><i class="fa-solid fa-download"></i></a>
+                    </li>
+                @empty
+                    <li class="list-group-item">No hay contenido disponible.</li>
+                @endforelse
+            </ul>
+            
         </div>
     </div>
     <div class="col-md-7">
@@ -59,30 +58,42 @@
             <form action="{{route('registrarHistoriaClinica')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 
-                <input type="hidden" class="form-control" id="paciente_id" name="paciente_id" value="{{ $paciente->id }}" required>
+                <input type="hidden" class="form-control" id="paciente_id" name="paciente_id" value="{{ $paciente->id }}" >
                 
                 <input type="hidden" class="form-control" id="cita_id" name="cita_id" value="{{ $cita->id }}" required>
                 <div class="row g-3">
                     <div class="col-md-7">
                         <label for="titulo" class="form-label">Título:</label>
-                        <input type="text" class="form-control" id="titulo" name="titulo" required>
+                        <input type="text" class="form-control @error('titulo') border border-danger @enderror" id="titulo" name="titulo" value="{{ old('titulo') }}" >
+                        @error('titulo')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="col-md-5">
                         <label for="tipo" class="form-label">Tipo:</label>
-                        <select class="form-select" id="tipo" name="tipo" required>
+                        <select class="form-select @error('tipo') border border-danger @enderror" id="tipo" name="tipo" >
                             <option value="Inicial">Inicial</option>
                             <option value="Control">Control</option>
                         </select>
+                        @error('tipo')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
             
                     <div class="col-md-12">
                         <label for="archivo_respaldo" class="form-label">Documento:</label>
-                        <input type="file" class="form-control" id="archivo_respaldo" name="archivo_respaldo" accept=".doc, .docx, .pdf" required>
+                        <input type="file" class="form-control @error('archivo_respaldo') border border-danger @enderror" value="{{ old('archivo_respaldo') }}"  id="archivo_respaldo" name="archivo_respaldo" accept=".pdf">
+                        @error('archivo_respaldo')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
-
+            
                     <div class="col-md-12">
                         <label for="diagnostico" class="form-label">Diagnóstico:</label>
-                        <textarea class="form-control" id="diagnostico" name="diagnostico" style="min-height: 100px" required></textarea>
+                        <textarea class="form-control @error('diagnostico') border border-danger @enderror" id="diagnostico" value="{{ old('diagnostico') }}"  name="diagnostico" style="min-height: 100px" ></textarea>
+                        @error('diagnostico')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
             
                     <div class="col-md-7 mt-3">
@@ -90,10 +101,11 @@
                     </div>
                 </div>
             </form>
+            
         </div>
         <div class="col-md-12 mt-4">
             <h2 class="text-center">Documento Médico Actual</h2>
-            <embed id="visorPDF" type="application/pdf" width="100%" height="600">
+            <embed id="visorPDF" type="application/pdf" width="100%" height="600" readonly>
         </div>
     </div>
 </div>

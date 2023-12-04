@@ -12,7 +12,7 @@ class Cita extends Model
     
     protected $table = 'citas';
     protected $fillable = ['id','paciente_id', 'fecha_hora', 'descripcion', 'resultados_medicos', 'medico_id', 'estado'];
-
+    public $timestamps = false;
     public static function obtenerCitas($busqueda) {
         return Cita::with(['paciente', 'medico.user'])
             ->select(
@@ -28,7 +28,7 @@ class Cita extends Model
                     ->orWhere('pacientes.apellidos', 'LIKE', '%' . $busqueda . '%')
                     ->orWhere('pacientes.dni', 'LIKE', '%' . $busqueda . '%');
             })
-            ->paginate(8);
+            ->paginate(5);
     }
     public static function obtenerTodasLasCitas($estado = 'Todos', $idMedico = 0) {
         $citasQuery = Cita::with(['paciente', 'medico.user'])

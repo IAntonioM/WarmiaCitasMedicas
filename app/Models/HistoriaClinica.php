@@ -18,7 +18,6 @@ class HistoriaClinica extends Model
         'archivo_adjunto_path',
         'tipo',
     ];
-
     public function paciente()
     {
         return $this->belongsTo(Paciente::class, 'paciente_id');

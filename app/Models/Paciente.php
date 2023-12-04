@@ -62,6 +62,7 @@ class Paciente extends Model
         {
             return DB::select('SELECT * FROM pacientes WHERE id = ? LIMIT 1', [$id]);
         }
+        
         public function citas()
     {
         return $this->hasMany(Cita::class, 'paciente_id');

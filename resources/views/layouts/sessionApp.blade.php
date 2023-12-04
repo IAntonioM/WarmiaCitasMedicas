@@ -78,6 +78,11 @@
                             <i class="fa-solid fa-hospital-user"></i> Gestion de Pacientes
                         </a>
                     </li>
+                    <li class="{{ request()->is('cita','cita/*') ? 'active' : '' }}">
+                        <a href="{{ route('gestionCitas') }}" class="text-decoration-none px-3 py-2 d-block">
+                            <i class="fa-solid fa-calendar-check"></i> Gestion de Citas
+                        </a>
+                    </li>
                     <li class="{{ request()->is('sala-espera','sala-espera/*') ? 'active' : '' }}">
                         <a href="{{ route('salaDeEspera') }}" class="text-decoration-none px-3 py-2 d-block">
                             <i class="fa-solid fa-hourglass-start"></i> Sala de Espera
@@ -117,7 +122,7 @@
                     <p class="px-3 d-block">Otros</p>
                     
                     <li class="{{ request()->is('calendario-medico') ? 'active' : '' }}">
-                        <a href="{{ route('medicoCalendario') }}" class="text-decoration-none px-3 py-2 d-block">
+                        <a href="{{ route('calendarioCitas') }}" class="text-decoration-none px-3 py-2 d-block">
                             <i class="fa fa-calendar"></i> Calendario Medico
                         </a>
                     </li>

@@ -15,10 +15,9 @@
 @section('contenido')
 <hr>
 <div class="row">
-    <input type="hidden" id="IdUsuario" name="" value=" {{auth()->user()->id}} ">
     <div class="col"></div>
     <div class="col-7">
-        <div id="calendar"></div>
+        @include('calendario.calendario')
     </div>
     <div class="col"></div>
 </div>
@@ -30,13 +29,12 @@
 
 @endsection
 
-@section('script')  
-<script>
-    let appURL = "{{ $appURL }}";
-</script>
+@section('script') 
+    <script>
+        let appURL = "{{ $appURL }}";
+    </script> 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            let idUser = document.querySelector("#IdUsuario").value;
             let formulario = document.querySelector("form");
             const calendarEl = document.getElementById('calendar');
             const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -47,7 +45,7 @@
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,listWeek'
                 },
-                events: appURL+"cita/medico-calendario/"+idUser,
+                events: appURL+"cita/cita-calendario/Todos/0",
                 dateClick: function (info) {
                     formulario.reset();
                     formulario.start.value=info.dateStr;
@@ -55,6 +53,35 @@
 
                     $("#evento").modal("show");
                 },
+            eventClick:function(info){
+                var evento=info.event;
+                axios.get(appURL+"calendario/cita/"+info.event.id).
+                then((response)=>{
+                    var cita = response.data;
+                    $("#modalTitleId").text("Detalles de Cita, " + cita.estado);
+                    var modalBodyContent = `
+                        <p><strong>Fecha y Hora:</strong> ${cita.fecha_hora}</p>
+                        <p><strong>Motivo de Consulta:</strong> ${cita.motivo_consulta}</p>
+                        <p><strong>Estado:</strong> ${cita.estado}</p>
+                        <!-- Agregar más detalles según sea necesario -->
+
+                        <!-- Ejemplo: Detalles del Paciente -->
+                        <p><strong>Paciente:</strong> ${cita.paciente.nombres} ${cita.paciente.apellidos}</p>
+                        <p><strong>DNI:</strong> ${cita.paciente.dni}</p>
+                        
+                        <!-- Ejemplo: Detalles del Médico -->
+                        <p><strong>Médico:</strong> ${cita.medico.nombres} ${cita.medico.apellidos}</p>
+                        <p><strong>Especialidad:</strong> ${cita.medico.especialidad.nombre}</p>
+                    `;
+
+                    $(".modal-body").html(modalBodyContent);
+                    $("#evento").modal("show");
+                    
+                })
+                .catch(function (error) {
+                    console.error('Error al consultar detalles de cita:', error);
+                });
+            },
                 eventContent: function (arg) {
                     return {
                         html: `

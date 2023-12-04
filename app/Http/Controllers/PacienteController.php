@@ -21,7 +21,7 @@ class PacienteController extends Controller
                             ->orWhere('nombres', 'LIKE', '%' . $busqueda . '%')
                             ->orWhere('apellidos', 'LIKE', '%' . $busqueda . '%')
                             ->orWhere('dni', 'LIKE', '%' . $busqueda . '%')
-                            ->paginate(7);
+                            ->paginate(6);
                     
         return view("paciente.gestionPacientes", compact('pacientes','busqueda'));
     }
