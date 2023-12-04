@@ -18,7 +18,7 @@ class CalendarioController extends Controller
         if($user->cargo=="Medico"){
             return view("calendario.calendarioMedico",compact('appURL'));
         }else{
-            return view("calendario.CalendarioCita",compact('appURL'));
+            return view("calendario.calendarioCita",compact('appURL'));
         }
     }
     public function store(Request $request){
